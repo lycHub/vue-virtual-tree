@@ -1,4 +1,4 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
-createApp(App).mount('#app')
+import VirTree from './components'
+createApp(App).use(VirTree).mount('#app')
