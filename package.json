@@ -2,7 +2,9 @@
   "name": "vue-virtual-tree",
   "version": "0.0.2",
   "main": "./lib/vue-virtual-tree.common.js",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

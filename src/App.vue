@@ -2,7 +2,7 @@
   <div class="container">
     <VirCheckbox v-model="checked">aaa</VirCheckbox>
     <VirtualList :size="42" :remain="8" :list="['a', 'b']" v-slot="{ item }">
-      list--{{ item }}
+      <p>list--{{ item }}</p>
     </VirtualList>
   </div>
 </template>
