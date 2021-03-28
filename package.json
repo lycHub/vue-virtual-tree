@@ -9,7 +9,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "gulp": "gulp",
-    "bundle": "vue-cli-service build --dest lib --target lib ./src/components/index.ts"
+    "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && npm run gulp"
   },
   "dependencies": {
     "core-js": "^3.6.5",
