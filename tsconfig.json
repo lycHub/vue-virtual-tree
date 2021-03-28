@@ -10,6 +10,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+//    "declaration": true,
+//    "declarationDir": "treeTypes",
     "baseUrl": ".",
     "types": [
       "webpack-env"

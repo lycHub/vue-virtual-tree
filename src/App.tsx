@@ -1,14 +1,5 @@
-<template>
-  <div id="app">
-    <section class="demo-sec">
-      <p>tree demo:</p>
-      <vir-tree :source="nodes" show-checkbox ref="treeInstance" />
-    </section>
-  </div>
-</template>
-
-<script lang="tsx">
 import { VirTree } from "./components";
+// import { VirTree } from "../lib/index.js";
 import {onMounted, ref} from "vue";
 import {TreeInstance, TreeNodeOptions} from "./components/VirtualTree/types";
 export default {
@@ -50,13 +41,15 @@ export default {
     const renderContent = (node: TreeNodeOptions) => {
       return (<b>{ node.name }</b>);
     }
-    return {
-      value,
-      nodes,
-      treeInstance,
-      getCheckNodes,
-      renderContent
+    return () => {
+      return (
+        <div id="app">
+          <section class="demo-sec">
+            <p>tree demo:</p>
+            <VirTree source={ nodes.value } showCheckbox ref="treeInstance" />
+          </section>
+        </div>
+      );
     }
   }
 }
-</script>
