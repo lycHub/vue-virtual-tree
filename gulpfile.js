@@ -1,6 +1,7 @@
 const {src, dest, series} = require('gulp');
 const gts = require('gulp-typescript');
 const rename = require('gulp-rename');
+const del = require('del');
 
 function scripts() {
   return src(['src/components/**/*.tsx', 'src/components/**/*.ts'])
@@ -17,4 +18,8 @@ function renameEntryScript() {
     .pipe(dest('lib'));
 }
 
-exports.default = series(scripts, renameEntryScript);
+function clean() {
+  return del(['lib/vue-virtual-tree.common.js']);
+}
+
+exports.default = series(scripts, renameEntryScript, clean);
