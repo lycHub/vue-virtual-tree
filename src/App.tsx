@@ -1,5 +1,6 @@
-import { VirTree } from "./components";
-// import { VirTree } from "../lib/index.js";
+// import { VirTree } from "./components";
+// @ts-ignore
+import { VirTree } from "../lib/index";
 import {onMounted, ref} from "vue";
 import {TreeInstance, TreeNodeOptions} from "./components/VirtualTree/types";
 export default {
