@@ -1,6 +1,27 @@
-export interface TreeNodeOptions {
+type nodeKey = string | number;
+
+/*
+* 用户传入的source必须要有 key, name, hasChildren
+* */
+
+interface TreeNodeOptions {
+  nodeKey: nodeKey;
   name: string;
-  expanded: boolean;
-  hasChildren: boolean;
-  children: TreeNodeOptions[];
+  level?: number;
+  loading?: boolean;
+  disabled?: boolean;
+  expanded?: boolean;
+  selected?: boolean;
+  checked?: boolean;
+  hasChildren?: boolean;
+  children?: TreeNodeOptions[];
+  parentKey?: nodeKey | null;
+  [key: string]: any;
 }
+
+interface TreeInstance {
+  getSelectedNode: () => TreeNodeOptions | undefined;
+  getCheckedNodes: () => TreeNodeOptions[];
+}
+
+export { TreeNodeOptions, nodeKey, TreeInstance };

@@ -1,5 +1,4 @@
 import {defineComponent, computed, onMounted, ref, markRaw, watch} from 'vue';
-import './index.scss';
 import {ZoneInfo} from "./types";
 
 export default defineComponent({
@@ -32,6 +31,10 @@ export default defineComponent({
     additional: { // 额外渲染多少个节点？
       type: Number,
       default: 0
+    },
+    dataKey: {
+      type: String,
+      default: 'id'
     }
   },
   emits: ['update:modelValue', 'range'],
@@ -174,7 +177,7 @@ export default defineComponent({
         return slots.default!();
       }
       return visibleList.value.map((item, index) => {
-        return slots.default!({ item, index: base.start + index });
+        return <div key={ item[props.dataKey] }>{ slots.default!({ item, index: base.start + index }) }</div>;
       });
     }
     return () => {

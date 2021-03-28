@@ -1,5 +1,70 @@
 @import "../../assets/styles/base";
+@import "../../assets/styles/iconfont.css";
+
 .#{$vir-pre}tree {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  user-select: none;
+    &-wrap {
+    .#{$vir-pre}tree-node {
+      display: flex;
+      padding: 4px 0;
+      line-height: normal;
+      font-size: $font-size-base;
+      cursor: pointer;
+      transition: all .2s ease-in-out;
+      &:hover {
+        color: $primary-color;
+      }
+      .node-arrow {
+        width: 16px;
+        text-align: center;
+        cursor: pointer;
+        .iconfont {
+          display: block;
+        }
+        &.expanded {
+          .iconfont {
+            transform: rotate(90deg);
+          }
+        }
+        .iconloading {
+          animation: roundLoading 1s linear infinite;
+        }
+      }
+      .node-content {
+        .node-title {
+          padding: 0 6px;
+          vertical-align: top;
+          color: #515a6e;
+          white-space: nowrap;
+          transition: background-color .2s;
+          &.selected {
+            color: $primary-color;
+          }
+          &.disabled {
+            cursor: not-allowed;
+            color: $disable-color;
+          }
+        }
+      }
 
+    }
+    .node-selected .node-title {
+      background-color: #d5e8fc;
+    }
+    /*.#{$vir-pre}children {
+      padding-left: 18px;
+    }*/
+  }
+
+  @keyframes roundLoading {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
-

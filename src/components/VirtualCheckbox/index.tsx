@@ -13,7 +13,7 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'change'],
   setup(props, { emit, slots }) {
     const rootCls = computed(() => {
       let result = 'vir-checkbox';
@@ -28,6 +28,7 @@ export default defineComponent({
     const handleClick = () => {
       if (!props.disabled) {
         emit('update:modelValue', !props.modelValue);
+        emit('change', !props.modelValue);
       }
     }
     return () => {
