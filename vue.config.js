@@ -1,5 +1,4 @@
 const tsImportPluginFactory = require('ts-import-plugin');
-const { join } = require('path');
 
 const lazyImport = () => ({
   before: [tsImportPluginFactory({
@@ -40,7 +39,7 @@ module.exports = {
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'scss',
-      patterns: [join(__dirname, './src/assets/styles/variable.scss')]
+      patterns: ['./src/assets/styles/variable.scss']
     }
   }
 }

@@ -28,8 +28,6 @@
   $top-bottom-height: 64px;
   .app-layout {
     .header {
-      position: fixed;
-      width: 100%;
       display: flex;
       align-items: center;
       color: $white-color;
@@ -45,7 +43,6 @@
     }
     .content {
       min-height: calc(100vh - #{$top-bottom-height * 2});
-      margin-top: $top-bottom-height;
       background-color: $white-color;
     }
     .footer {
