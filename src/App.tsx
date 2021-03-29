@@ -1,10 +1,8 @@
-import {onMounted, ref, resolveComponent} from "vue";
+import {onMounted, ref} from "vue";
 import { Button } from "ant-design-vue";
-// import 'ant-design-vue/lib/button/style/index.css'
 export default {
   name: 'App',
   setup() {
-    // const AButton = resolveComponent('AButton')
     return () => {
       return (
         <div id="root">
