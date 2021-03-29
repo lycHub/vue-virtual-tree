@@ -1,5 +1,6 @@
 import {onMounted, ref, resolveComponent} from "vue";
-// import { Button } from "ant-design-vue";
+import { Button } from "ant-design-vue";
+// import 'ant-design-vue/lib/button/style/index.css'
 export default {
   name: 'App',
   setup() {
@@ -13,7 +14,7 @@ export default {
             <li>bb</li>
           </ul>
           button:
-          <a-button>aabc</a-button>
+          <Button loading>aabc</Button>
         </div>
       );
     }
