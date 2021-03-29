@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.6",
+    "@vue/babel-plugin-jsx": "^1.0.3",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
