@@ -25,7 +25,6 @@
   });
 </script>
 <style lang="scss" scoped>
-  @import "./assets/styles/variable";
   $top-bottom-height: 64px;
   .app-layout {
     .header {

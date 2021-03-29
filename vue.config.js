@@ -1,4 +1,6 @@
 const tsImportPluginFactory = require('ts-import-plugin');
+const { join } = require('path');
+
 const lazyImport = () => ({
   before: [tsImportPluginFactory({
     libraryName: 'ant-design-vue',
@@ -34,5 +36,11 @@ module.exports = {
         return options
       })
       .end();
+  },
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'scss',
+      patterns: [join(__dirname, './src/assets/styles/variable.scss')]
+    }
   }
 }
