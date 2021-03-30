@@ -5,7 +5,9 @@
     </div>
     <div class="meta">
       <div class="title">基本用法</div>
-      <div class="desc">desc</div>
+      <div class="desc">
+        <p>选中，禁用，默认展开等基本功能。</p>
+      </div>
       <div class="actions">
         <span class="act">
           <a>展开</a>

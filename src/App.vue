@@ -19,7 +19,7 @@
     components: { DocContainer },
     setup() {
       return {
-        selectedKeys: ref<string[]>(['2']),
+        selectedKeys: ref<string[]>(['2'])
       };
     },
   });

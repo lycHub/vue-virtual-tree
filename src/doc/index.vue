@@ -1,13 +1,13 @@
 <template>
   <div class="doc-container">
     <h3>代码演示</h3>
-    <a-row gutter="16" class="demo-boxes">
-      <a-col span="12">
+    <a-row :gutter="16" class="demo-boxes">
+      <a-col :span="12">
         <demo-box>
           <base-demo />
         </demo-box>
       </a-col>
-      <a-col span="12">
+      <a-col :span="12">
         <demo-box>
           show 2
         </demo-box>
