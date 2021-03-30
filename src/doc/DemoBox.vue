@@ -15,43 +15,23 @@
             <a>{{ toggleBtnLabel }}</a>
           </span>
         </a-tooltip>
-        <a-tooltip>
-          <template #title>复制</template>
-          <span class="act" @click="toggleExpand">
-            <a>copy</a>
-          </span>
-        </a-tooltip>
-
+        <a-typography-paragraph class="act" style="display: inline-block" :copyable="{ text: preCode.source }" />
       </div>
     </div>
-    <div class="highlight-wrap">
-      <div class="highlight">
-        <pre>
-          <code class="language-vue">
-            &lt;template&gt;
-              &lt;a-card title="Default size card" style="width: 300px"&gt;
-                &lt;template #extra&gt;&lt;a href="#"&gt;more&lt;/a&gt;&lt;/template&gt;
-                &lt;p&gt;card content&lt;/p&gt;
-                &lt;p&gt;card content&lt;/p&gt;
-                &lt;p&gt;card content&lt;/p&gt;
-              &lt;/a-card&gt;
-              &lt;br /&gt;
-              &lt;a-card size="small" title="Small size card" style="width: 300px"&gt;
-                &lt;template #extra&gt;&lt;a href="#"&gt;more&lt;/a&gt;&lt;/template&gt;
-                &lt;p&gt;card content&lt;/p&gt;
-                &lt;p&gt;card content&lt;/p&gt;
-                &lt;p&gt;card content&lt;/p&gt;
-              &lt;/a-card&gt;
-            &lt;/template&gt;
-          </code>
-        </pre>
-      </div>
+    <div class="highlight-wrap" v-show="toggleBtnLabel === '收起'">
+      <div class="highlight" v-html="preCode.highlight"></div>
     </div>
   </div>
 </template>
 
 <script lang="tsx">
 import {defineComponent, ref} from 'vue';
+  interface PreCode {
+    source: string;
+    highlight: string;
+  }
+
+  const code = require('./HighlightCodes.json');
   export default defineComponent({
     name: 'DemoBox',
     props: {
@@ -62,13 +42,16 @@ import {defineComponent, ref} from 'vue';
     },
     emits: [],
     setup(prop, {emit}) {
-      const toggleBtnLabel = ref('展开');
+      const toggleBtnLabel = ref<'展开' | '收起'>('展开');
+      const preCode = ref<PreCode | null>(null);
       const toggleExpand = () => {
         toggleBtnLabel.value = toggleBtnLabel.value === '展开' ? '收起' : '展开';
       }
+      preCode.value = code.base;
       return {
         toggleBtnLabel,
-        toggleExpand
+        toggleExpand,
+        preCode
       }
     }
   });
@@ -119,7 +102,6 @@ import {defineComponent, ref} from 'vue';
       }
     }
     .highlight-wrap {
-      display: none;
       border-radius: 0 0 2px 2px;
       .highlight {
         padding: 16px 32px;
