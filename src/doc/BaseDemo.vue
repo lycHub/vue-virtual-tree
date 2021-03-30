@@ -7,7 +7,7 @@
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
   import {TreeInstance, TreeNodeOptions} from "@/components/VirtualTree/types";
-  import {recursion} from "@/doc/uses";
+  import {recursion} from "./uses/tree";
 
   export default defineComponent({
     name: 'BaseDemo',

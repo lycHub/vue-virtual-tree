@@ -9,15 +9,25 @@
         <p>选中，禁用，默认展开等基本功能。</p>
       </div>
       <div class="actions">
-        <span class="act">
-          <a>展开</a>
-        </span>
+        <a-tooltip>
+          <template #title>{{ toggleBtnLabel }}</template>
+          <span class="act" @click="toggleExpand">
+            <a>{{ toggleBtnLabel }}</a>
+          </span>
+        </a-tooltip>
+        <a-tooltip>
+          <template #title>复制</template>
+          <span class="act" @click="toggleExpand">
+            <a>copy</a>
+          </span>
+        </a-tooltip>
+
       </div>
     </div>
     <div class="highlight-wrap">
       <div class="highlight">
         <pre>
-          <code class=" language-vue">
+          <code class="language-vue">
             &lt;template&gt;
               &lt;a-card title="Default size card" style="width: 300px"&gt;
                 &lt;template #extra&gt;&lt;a href="#"&gt;more&lt;/a&gt;&lt;/template&gt;
@@ -41,13 +51,25 @@
 </template>
 
 <script lang="tsx">
-  import {defineComponent} from 'vue';
+import {defineComponent, ref} from 'vue';
   export default defineComponent({
     name: 'DemoBox',
-    props: {},
+    props: {
+      title: {
+        type: String,
+        default: ''
+      }
+    },
     emits: [],
     setup(prop, {emit}) {
-      return {}
+      const toggleBtnLabel = ref('展开');
+      const toggleExpand = () => {
+        toggleBtnLabel.value = toggleBtnLabel.value === '展开' ? '收起' : '展开';
+      }
+      return {
+        toggleBtnLabel,
+        toggleExpand
+      }
     }
   });
 </script>
@@ -87,11 +109,12 @@
         opacity: .7;
         text-align: center;
         transition: opacity .3s;
+        user-select: none;
         &:hover {
           opacity: 1;
         }
         .act {
-
+          margin-right: 8px;
         }
       }
     }
