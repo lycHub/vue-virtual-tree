@@ -6,7 +6,7 @@
     "lib"
   ],
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 4200",
     "build": "vue-cli-service build",
     "gulp": "gulp",
     "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && npm run gulp"
