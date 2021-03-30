@@ -1,10 +1,11 @@
 {
   "name": "vue-virtual-tree",
   "version": "0.0.5",
-  "main": "./lib/index.js",
+  "main": "./lib/vue-virtual-tree.common.js",
   "files": [
     "lib"
   ],
+  "typings": "typings/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve --port 4200",
     "build": "vue-cli-service build",
@@ -22,9 +23,7 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
-    "del": "^6.0.0",
     "gulp": "^4.0.2",
-    "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
