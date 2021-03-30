@@ -3,7 +3,7 @@
   "version": "0.0.5",
   "main": "./lib/vue-virtual-tree.common.js",
   "files": [
-    "lib"
+    "lib", "typings"
   ],
   "typings": "typings/index.d.ts",
   "scripts": {
@@ -23,6 +23,7 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1",
     "sass": "^1.26.5",

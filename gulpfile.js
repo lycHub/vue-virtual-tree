@@ -1,11 +1,15 @@
-const {src, dest} = require('gulp');
+const {src, dest, series} = require('gulp');
 const gts = require('gulp-typescript');
+const del = require('del');
 
-exports.default = () => {
+function scripts() {
   return src(['src/components/**/*.tsx', 'src/components/**/*.ts'])
-    .pipe(gts.createProject('tsconfig.json', {
-      declaration: true,
-      emitDeclarationOnly: true
-    })())
+    .pipe(gts.createProject('src/components/tsconfig.json')())
     .pipe(dest('typings'));
-};
+}
+
+function clean() {
+  return del(['typings']);
+}
+
+exports.default = series(clean, scripts);
