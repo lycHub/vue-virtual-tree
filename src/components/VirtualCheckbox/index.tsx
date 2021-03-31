@@ -11,6 +11,10 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false
+    },
+    halfChecked: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['update:modelValue', 'change'],
@@ -22,6 +26,9 @@ export default defineComponent({
       }
       if (props.disabled) {
         result += ' disabled';
+      }
+      if (props.halfChecked) {
+        result += ' half-checked';
       }
       return result;
     });

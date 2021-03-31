@@ -1,7 +1,8 @@
-import {computed, defineComponent, PropType, ref, toRefs, watch} from "vue";
-import {TreeNodeOptions} from "./types";
+import {computed, defineComponent, PropType, ref, toRaw, toRefs, watch} from "vue";
+import {TreeNodeInstance, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
+import {useExpose} from "@/components/VirtualTree/uses";
 
 export default defineComponent({
   name: 'VirTreeNode',
@@ -14,10 +15,23 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    checkStrictly: {
+      type: Boolean,
+      default: false
+    },
     render: Function
   },
   emits: ['select-change', 'toggle-expand', 'check-change'],
   setup(props, { emit }) {
+    const halfChecked = computed(() => {
+      let result = false;
+      if (!props.checkStrictly && props.node.hasChildren) {
+        const { children } = props.node;
+        const checkedChildren = children!.filter(item => item.checked);
+        result = checkedChildren.length > 0 && checkedChildren.length < children!.length;
+      }
+      return result;
+    });
     const textCls = computed(() => {
       let result = 'node-title';
       if (props.node.selected) {
@@ -49,8 +63,13 @@ export default defineComponent({
 
     const renderContent = () => {
       if (props.showCheckbox) {
-        // @ts-ignore
-        return <VirtualCheckbox class="node-content node-check-box" disabled={ props.node.disabled } modelValue={ props.node.checked } onChange={ handleCheckChange }>
+        return <VirtualCheckbox
+          class="node-content node-check-box"
+          disabled={ props.node.disabled }
+          modelValue={ props.node.checked }
+          halfChecked={ halfChecked.value }
+          // @ts-ignore
+          onChange={ handleCheckChange }>
           {
             props.render ? <RenderNode render={ props.render } node={ props.node } /> : <span class="node-title">{ props.node.name }</span>
           }
@@ -62,6 +81,10 @@ export default defineComponent({
         }
       </div>;
     }
+    useExpose<TreeNodeInstance>({
+      rawNode: toRaw(props.node),
+      halfChecked: () => halfChecked.value
+    });
     return () => {
       return (
         <div class="vir-tree-node" style={{ paddingLeft: props.node.level! * 18 + 'px' }}>

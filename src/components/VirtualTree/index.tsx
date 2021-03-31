@@ -1,6 +1,6 @@
-import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
+import {defineComponent, watch, ref, shallowRef, PropType, h, ComponentPublicInstance, toRaw, unref} from 'vue';
 import cloneDeep from 'lodash.clonedeep';
-import {nodeKey, TreeInstance, TreeNodeOptions} from "./types";
+import {nodeKey, TreeInstance, TreeNodeInstance, TreeNodeOptions} from "./types";
 import {flattenTree, updateDownwards, updateUpwards, useExpose} from "./uses";
 import VirTreeNode from './node';
 import VirtualList from '../VirtualList';
@@ -56,7 +56,7 @@ export default defineComponent({
         emit('selectChange', node);
       }
     }
-    
+
 
     const checkChange = ([checked, node]: [boolean, TreeNodeOptions]) => {
       node.checked = checked;
@@ -103,7 +103,7 @@ export default defineComponent({
         flatList.value = flatList.value.filter(item => !delKeys.includes(item.nodeKey));
       }
     }
-    
+
     const toggleExpand = (node: TreeNodeOptions) => {
       if (loading.value) return;
       node.expanded = !node.expanded;
@@ -142,15 +142,24 @@ export default defineComponent({
         />
       });
     }*/
-
+    const nodeRefs = ref<TreeNodeInstance[]>([]);
+    const setRef = (index: number, node: any) => {
+      if (node) {
+        nodeRefs.value[index] = node as TreeNodeInstance;
+      }
+    }
     useExpose<TreeInstance>({
       getSelectedNode: (): TreeNodeOptions | undefined => {
         return flatList.value.find(item => item.selected);
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
         return flatList.value.filter(item => item.checked);
+      },
+      getHalfCheckedNodes: (): TreeNodeOptions[] => {
+        return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);
       }
     });
+
     return () => {
       return (
         <div class="vir-tree">
@@ -162,9 +171,11 @@ export default defineComponent({
               list: flatList.value,
               dataKey: 'nodeKey',
             }, {
-              default: (data: { item: TreeNodeOptions }) => h(VirTreeNode, {
+              default: (data: { item: TreeNodeOptions, index: number }) => h(VirTreeNode, {
+                ref: setRef.bind(null, data.index),
                 node: data.item,
                 showCheckbox: props.showCheckbox,
+                checkStrictly: props.checkStrictly,
                 render: props.render,
                 onSelectChange: selectChange,
                 onToggleExpand: toggleExpand,

@@ -1,5 +1,4 @@
 import { VirTree } from "./components";
-// import { VirTree } from "../lib/index";
 import {onMounted, ref} from "vue";
 import {TreeInstance, TreeNodeOptions} from "./components/VirtualTree/types";
 
@@ -16,7 +15,7 @@ const treeData: TreeNodeOptions[] = [
         hasChildren: true,
         children: [
           { name: '0-0-0-0', nodeKey: '0-0-0-0' },
-          { name: '0-0-0-1', nodeKey: '0-0-0-1' },
+          { name: '0-0-0-1', nodeKey: '0-0-0-1', checked: true },
           { name: '0-0-0-2', nodeKey: '0-0-0-2' }
         ]
       },
@@ -93,12 +92,17 @@ export default {
     const renderContent = (node: TreeNodeOptions) => {
       return (<b>{ node.name }</b>);
     }
+    const getHalfNodes = () => {
+      const halfs = treeInstance.value!.getHalfCheckedNodes();
+      console.log('halfs', halfs);
+    }
     return () => {
       return (
         <div id="app">
+          <button onClick={ getHalfNodes }>get half nodes</button>
           <section class="demo-sec">
             <p>tree demo:</p>
-            <VirTree source={ nodes.value } show-checkbox ref="treeInstance" />
+            <VirTree source={ nodes.value } show-checkbox ref={ treeInstance } />
           </section>
         </div>
       );
