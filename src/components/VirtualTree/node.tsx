@@ -3,17 +3,7 @@ import {TreeNodeInstance, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
 import {useExpose} from "@/components/VirtualTree/uses";
-/*
-* export declare type Slots = Readonly<InternalSlots>;
 
-
-declare type InternalSlots = {
-    [name: string]: Slot | undefined;
-};
-
-
-export declare type Slot = (...args: any[]) => VNode[];
-* */
 export default defineComponent({
   name: 'VirTreeNode',
   props: {

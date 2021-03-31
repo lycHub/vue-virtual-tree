@@ -19,6 +19,13 @@
           </a-typography-paragraph>
           <img src="./principle.png" alt="原理" />
         </div>
+        <div class="custom-view">
+          <a-typography-title :level="4">关于自定义样式</a-typography-title>
+          <a-typography-paragraph>
+            组件已经提供自定义node节点和图标的功能(见下面示例)，
+            如果还有些样式需要更细致的修改，请自行用css覆盖
+          </a-typography-paragraph>
+        </div>
       </a-card>
     </section>
     <section class="sec">
