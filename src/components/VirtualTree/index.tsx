@@ -1,4 +1,4 @@
-import {defineComponent, watch, ref, shallowRef, PropType, h, ComponentPublicInstance, toRaw, unref} from 'vue';
+import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import cloneDeep from 'lodash.clonedeep';
 import {nodeKey, TreeInstance, TreeNodeInstance, TreeNodeOptions} from "./types";
 import {flattenTree, updateDownwards, updateUpwards, useExpose} from "./uses";
@@ -75,7 +75,7 @@ export default defineComponent({
         item.disabled = item.disabled || false;
         item.selected = item.selected || false;
         item.expanded = item.expanded || false;
-        item.checked = item.checked || node.checked;
+        item.checked = item.checked ?? node.checked;
         item.children = item.children || [];
         item.hasChildren = item.hasChildren || false;
         item.parentKey = node.nodeKey || null;

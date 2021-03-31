@@ -29,7 +29,7 @@
       <a-col :span="12" id="custom-node-demo">
         <demo-box
           title="自定义渲染节点"
-          desc="绑定render函数自定义节点，参数data为当前node数据"
+          desc="绑定render函数自定义节点，参数data为当前node数据。注意：如果改变了默认的高度(size), 需要传入size属性"
           code-type="customNode">
           <custom-node-demo />
         </demo-box>

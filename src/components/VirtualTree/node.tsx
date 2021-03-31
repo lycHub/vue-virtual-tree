@@ -1,4 +1,4 @@
-import {computed, defineComponent, PropType, ref, toRaw, toRefs, watch} from "vue";
+import {computed, defineComponent, PropType} from "vue";
 import {TreeNodeInstance, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
@@ -82,7 +82,7 @@ export default defineComponent({
       </div>;
     }
     useExpose<TreeNodeInstance>({
-      rawNode: toRaw(props.node),
+      rawNode: props.node,
       halfChecked: () => halfChecked.value
     });
     return () => {

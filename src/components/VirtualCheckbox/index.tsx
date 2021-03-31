@@ -44,7 +44,7 @@ export default defineComponent({
           class={ rootCls.value }
           onClick={ handleClick }>
           <div class="inner" />
-          { slots.default && slots.default() }
+          <div class="content">{ slots.default && slots.default() }</div>
         </div>
       );
     }

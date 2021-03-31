@@ -8,6 +8,7 @@
     &-wrap {
     .#{$vir-pre}tree-node {
       display: flex;
+      align-items: center;
       padding: 4px 0;
       line-height: normal;
       font-size: $font-size-base;
@@ -40,7 +41,7 @@
           white-space: nowrap;
           transition: background-color .2s;
           &.selected {
-            color: $primary-color;
+            background-color: $assist-color;
           }
           &.disabled {
             cursor: not-allowed;
