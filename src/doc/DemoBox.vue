@@ -4,9 +4,9 @@
       <slot />
     </div>
     <div class="meta">
-      <div class="title">基本用法</div>
+      <div class="title">{{ title }}</div>
       <div class="desc">
-        <p>选中，禁用，默认展开等基本功能。</p>
+        <p>{{ desc }}</p>
       </div>
       <div class="actions">
         <a-tooltip>
@@ -38,16 +38,24 @@ import {defineComponent, ref} from 'vue';
       title: {
         type: String,
         default: ''
+      },
+      desc: {
+        type: String,
+        default: ''
+      },
+      codeType: {
+        type: String,
+        default: ''
       }
     },
     emits: [],
-    setup(prop, {emit}) {
+    setup(props, {emit}) {
       const toggleBtnLabel = ref<'展开' | '收起'>('展开');
       const preCode = ref<PreCode | null>(null);
       const toggleExpand = () => {
         toggleBtnLabel.value = toggleBtnLabel.value === '展开' ? '收起' : '展开';
       }
-      preCode.value = code.base;
+      preCode.value = code[props.codeType];
       return {
         toggleBtnLabel,
         toggleExpand,

@@ -2,12 +2,12 @@
   <div class="demo">
     <section>
       <h5>默认父子节点联动</h5>
-      <button @click="halfNodes">获取半选节点</button>
+      <a-button @click="halfNodes">获取半选节点</a-button>
       <vir-tree ref="virTreeOne" show-checkbox :source="list" />
     </section>
     <section>
       <h5>父子节点不联动</h5>
-      <button @click="checkedNodes">获取勾选节点</button>
+      <a-button @click="checkedNodes">获取勾选节点</a-button>
       <vir-tree ref="virTreeTwo" show-checkbox check-strictly :source="list" />
     </section>
   </div>
@@ -65,3 +65,12 @@
     }
   });
 </script>
+<style scoped lang="scss">
+  .demo {
+    display: flex;
+    justify-content: space-between;
+    section {
+      width: 45%;
+    }
+  }
+</style>
