@@ -6,6 +6,12 @@
     </a-layout-header>
     <a-layout-content class="content">
       <doc-container />
+      <a-anchor class="anchor">
+        <a-anchor-link href="#base-demo" title="基本用法" />
+        <a-anchor-link href="#checkbox-demo" title="可勾选" />
+        <a-anchor-link href="#async-dada-demo" title="异步加载" />
+        <a-anchor-link href="#custom-node-demo" title="自定义渲染节点" />
+      </a-anchor>
     </a-layout-content>
     <a-layout-footer class="footer">
       Ant Design ©2018 Created by Ant UED
@@ -42,8 +48,14 @@
       }
     }
     .content {
+      position: relative;
       min-height: calc(100vh - #{$top-bottom-height * 2});
       background-color: $white-color;
+      .anchor {
+        position: absolute;
+        right: 50px;
+        top: 30px;
+      }
     }
     .footer {
       text-align: center;

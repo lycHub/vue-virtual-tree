@@ -20,9 +20,9 @@
 
   function recursion(path = '0', level = 3): TreeNodeOptions[] {
     const list = [];
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < 10; i++) {
       const nodeKey = `${path}-${i}`;
-      const treeNode: TreeNodeOptions  = {
+      const treeNode: TreeNodeOptions = {
         nodeKey,
         name: nodeKey,
         children: [],

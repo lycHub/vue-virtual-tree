@@ -106,6 +106,7 @@ export default defineComponent({
 
     const toggleExpand = (node: TreeNodeOptions) => {
       if (loading.value) return;
+      console.log('expand node', node);
       node.expanded = !node.expanded;
       if (node.expanded) {
         if (node.children?.length) {
