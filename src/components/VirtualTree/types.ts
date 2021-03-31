@@ -22,6 +22,12 @@ interface TreeNodeOptions {
 interface TreeInstance {
   getSelectedNode: () => TreeNodeOptions | undefined;
   getCheckedNodes: () => TreeNodeOptions[];
+  getHalfCheckedNodes: () => TreeNodeOptions[];
 }
 
-export { TreeNodeOptions, nodeKey, TreeInstance };
+interface TreeNodeInstance {
+  rawNode: TreeNodeOptions;
+  halfChecked: () => boolean;
+}
+
+export { TreeNodeOptions, nodeKey, TreeInstance, TreeNodeInstance };
