@@ -34,6 +34,14 @@
           <custom-node-demo />
         </demo-box>
       </a-col>
+      <a-col :span="12" id="custom-icon-demo">
+        <demo-box
+            title="自定义图标"
+            desc="自定义展开、收起图标"
+            code-type="customIcon">
+          <custom-icon-demo />
+        </demo-box>
+      </a-col>
     </a-row>
   </div>
 </template>
@@ -45,9 +53,10 @@
   import CheckboxDemo from './CheckboxDemo.vue';
   import AsyncDataDemo from './AsyncDataDemo.vue';
   import CustomNodeDemo from './CustomNodeDemo.vue';
+  import CustomIconDemo from './CustomIconDemo.vue';
   export default defineComponent({
     name: 'DocContainer',
-    components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo },
+    components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo, CustomIconDemo },
     props: {},
     emits: [],
     setup(prop, {emit}) {

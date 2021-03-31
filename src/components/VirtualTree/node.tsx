@@ -1,9 +1,19 @@
-import {computed, defineComponent, PropType} from "vue";
+import {computed, defineComponent, PropType, Slot} from "vue";
 import {TreeNodeInstance, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
 import {useExpose} from "@/components/VirtualTree/uses";
+/*
+* export declare type Slots = Readonly<InternalSlots>;
 
+
+declare type InternalSlots = {
+    [name: string]: Slot | undefined;
+};
+
+
+export declare type Slot = (...args: any[]) => VNode[];
+* */
 export default defineComponent({
   name: 'VirTreeNode',
   props: {
@@ -11,6 +21,7 @@ export default defineComponent({
       type: Object as PropType<TreeNodeOptions>,
       required: true
     },
+    iconSlot: Function as PropType<Slot>,
     showCheckbox: {
       type: Boolean,
       default: false
@@ -54,9 +65,13 @@ export default defineComponent({
       emit('check-change', [checked, props.node])
     }
     const renderArrow = (): JSX.Element | null => {
-      return <div class={ ['node-arrow', props.node.expanded ? 'expanded' : ''] }>
+      return <div class={ ['node-arrow', props.node.expanded ? 'expanded' : ''] } onClick={ handleExpand }>
         {
-          props.node.hasChildren ? props.node.loading ? <i class="iconfont iconloading" /> : <i class="iconfont iconExpand" onClick={ handleExpand } /> : null
+          props.node.hasChildren
+            ? props.iconSlot ? props.iconSlot(props.node.loading) : props.node.loading
+            ? <i class="iconfont iconloading ico-loading" />
+            : <i class="iconfont iconExpand" />
+            : null
         }
       </div>
     }
@@ -85,6 +100,7 @@ export default defineComponent({
       rawNode: props.node,
       halfChecked: () => halfChecked.value
     });
+    // console.log('iconSlot', props.iconSlot);
     return () => {
       return (
         <div class="vir-tree-node" style={{ paddingLeft: props.node.level! * 18 + 'px' }}>

@@ -12,7 +12,7 @@
         <a-tooltip>
           <template #title>{{ toggleBtnLabel }}</template>
           <span class="act" @click="toggleExpand">
-            <a>{{ toggleBtnLabel }}</a>
+            <a><i class="iconfont iconcode"></i></a>
           </span>
         </a-tooltip>
         <a-typography-paragraph class="act" style="display: inline-block" :copyable="{ text: preCode.source }" />

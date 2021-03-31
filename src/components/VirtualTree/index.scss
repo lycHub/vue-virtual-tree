@@ -7,8 +7,6 @@
   user-select: none;
     &-wrap {
     .#{$vir-pre}tree-node {
-      display: flex;
-      align-items: center;
       padding: 4px 0;
       line-height: normal;
       font-size: $font-size-base;
@@ -18,8 +16,8 @@
         color: $primary-color;
       }
       .node-arrow {
-        width: 16px;
-        text-align: center;
+        display: inline-block;
+        margin-right: 4px;
         cursor: pointer;
         .iconfont {
           display: block;
@@ -29,11 +27,13 @@
             transform: rotate(90deg);
           }
         }
-        .iconloading {
+        .ico-loading {
           animation: roundLoading 1s linear infinite;
         }
       }
       .node-content {
+        display: inline-block;
+        vertical-align: top;
         .node-title {
           padding: 0 6px;
           vertical-align: top;

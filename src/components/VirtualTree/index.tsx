@@ -37,7 +37,7 @@ export default defineComponent({
     render: Function
   },
   emits: ['selectChange', 'checkChange'],
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const loading = shallowRef(false);
     const selectedKey = ref<string | number>('');
     const flatList = ref<TreeNodeOptions[]>([]);
@@ -106,7 +106,7 @@ export default defineComponent({
 
     const toggleExpand = (node: TreeNodeOptions) => {
       if (loading.value) return;
-      console.log('expand node', node);
+      console.log('expand node');
       node.expanded = !node.expanded;
       if (node.expanded) {
         if (node.children?.length) {
@@ -177,6 +177,7 @@ export default defineComponent({
                 node: data.item,
                 showCheckbox: props.showCheckbox,
                 checkStrictly: props.checkStrictly,
+                iconSlot: slots.icon,
                 render: props.render,
                 onSelectChange: selectChange,
                 onToggleExpand: toggleExpand,
