@@ -1,18 +1,18 @@
 # vue-virtual-tree
-### Based on vue3 encapsulation, the tree component dedicated to large data volume, if the data volume is not large, using this component is a bit costly
+### 基于vue3封装的，大数据量专用的tree组件，如果数据量不大，用本组件有些让费了
 
-English & [简体中文](README-CN.md)
+[English](README.md) & 简体中文
 
-## [Docs & Demo](https://lychub.github.io/vue-virtual-tree)
+## [文档 & 示例](https://lychub.github.io/vue-virtual-tree)
 
 
-## How to use
+## 基本使用
 
 ```
 npm i vue-virtual-tree
 ```
 
-Global registration, but this will lose the type, if you use typescript, this method is not recommended
+全局注册, 但这会丢失类型，如果你用了typescript, 不推荐这种方式
 ``` js
 import { createApp } from 'vue';
 import VirTree from 'vue-virtual-tree';
@@ -24,7 +24,7 @@ In components:
 ```
 
 
-Partial registration, you can get a complete type
+局部注册, 可以获得完整的类型
 ``` js
 <template>
   <div class="demo">
