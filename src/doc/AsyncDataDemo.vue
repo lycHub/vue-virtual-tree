@@ -8,7 +8,7 @@
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
   import {TreeInstance, TreeNodeOptions} from "../components/VirtualTree/types";
-  import {getCheckNodes} from "@/doc/uses";
+  import {getCheckNodes} from "./uses";
 
   function recursion(path = '0'): TreeNodeOptions[] {
     const list = [];

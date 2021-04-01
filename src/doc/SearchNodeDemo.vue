@@ -1,6 +1,6 @@
 <template>
   <div class="demo">
-    <input placeholder="回车搜索" @keyup.enter="search" />
+    <a-input placeholder="回车搜索" @pressEnter="search" />
     <section>
       <vir-tree show-checkbox :source="list" :render="renderNode" />
     </section>
@@ -9,8 +9,7 @@
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
-  import { VirTree } from "vue-virtual-tree";
-  import { TreeNodeOptions } from "vue-virtual-tree/VirtualTree/types";
+  import {TreeNodeOptions} from "../components/VirtualTree/types";
   const UNIQUE_WRAPPERS = ['##==-open_tag-==##', '##==-close_tag-==##'];
   let expandKeys: Array<string | number> = [];
   function getParentPath (parent: TreeNodeOptions | null): Array<string | number> {

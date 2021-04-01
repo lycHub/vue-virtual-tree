@@ -1,5 +1,5 @@
 import { App } from 'vue';
-import { Button, Layout, Menu, Row, Col, Tooltip, Typography, Anchor, Card } from "ant-design-vue";
+import { Button, Layout, Menu, Row, Col, Tooltip, Typography, Anchor, Card, Input } from "ant-design-vue";
 const components = [
   Button,
   Layout,
@@ -9,7 +9,8 @@ const components = [
   Tooltip,
   Typography,
   Anchor,
-  Card
+  Card,
+  Input
 ]
 export default function(app: App) {
   components.forEach(item => app.use(item));

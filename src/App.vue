@@ -13,6 +13,7 @@
         <a-anchor-link href="#async-dada-demo" title="异步加载" />
         <a-anchor-link href="#custom-node-demo" title="自定义渲染节点" />
         <a-anchor-link href="#custom-icon-demo" title="自定义图标" />
+        <a-anchor-link href="#search-node-demo" title="搜索树" />
       </a-anchor>
     </a-layout-content>
     <a-layout-footer class="footer">

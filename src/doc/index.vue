@@ -26,6 +26,13 @@
             如果还有些样式需要更细致的修改，请自行用css覆盖
           </a-typography-paragraph>
         </div>
+        <div class="custom-view">
+          <a-typography-title :level="4">关于刷新整个tree</a-typography-title>
+          <a-typography-paragraph>
+            处于新能考虑，tree内部监听 source时，并没有开启 <b>deep</b>
+            当你只改变source中的某个属性而view并未更新时，<b>可能需要改变source的引用，比如 list.value = list.value.slice()</b>
+          </a-typography-paragraph>
+        </div>
       </a-card>
     </section>
     <section class="sec">
@@ -54,7 +61,7 @@
             <custom-icon-demo />
           </demo-box>
         </a-col>
-        <a-col :span="12" id="checkbox-demo">
+        <a-col :span="12">
           <demo-box
             id="checkbox-demo"
             title="可勾选"
@@ -68,6 +75,13 @@
             desc="绑定render函数自定义节点，参数data为当前node数据。注意：如果改变了默认的高度(size), 需要传入size属性"
             code-type="customNode">
             <custom-node-demo />
+          </demo-box>
+          <demo-box
+            id="search-node-demo"
+            title="搜索树"
+            desc="虽然组件内部没有直接提供，但可以配合render自行实现"
+            code-type="searchNode">
+            <search-node-demo />
           </demo-box>
         </a-col>
       </a-row>
@@ -83,9 +97,10 @@
   import AsyncDataDemo from './AsyncDataDemo.vue';
   import CustomNodeDemo from './CustomNodeDemo.vue';
   import CustomIconDemo from './CustomIconDemo.vue';
+  import SearchNodeDemo from './SearchNodeDemo.vue';
   export default defineComponent({
     name: 'DocContainer',
-    components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo, CustomIconDemo },
+    components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo, CustomIconDemo, SearchNodeDemo },
     props: {},
     emits: [],
     setup(prop, {emit}) {

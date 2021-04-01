@@ -2,7 +2,7 @@ import {computed, defineComponent, PropType, Slot} from "vue";
 import {TreeNodeInstance, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
-import {useExpose} from "@/components/VirtualTree/uses";
+import {useExpose} from "./uses";
 
 export default defineComponent({
   name: 'VirTreeNode',
