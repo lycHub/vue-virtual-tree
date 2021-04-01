@@ -6,7 +6,7 @@
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
-  import {TreeInstance, TreeNodeOptions} from "../components/VirtualTree/types";
+  import {TreeNodeOptions} from "../components/VirtualTree/types";
 
   function recursion(path = '0', level = 3): TreeNodeOptions[] {
     const list = [];
