@@ -32,7 +32,6 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "style-resources-loader": "^1.4.1",
-    "ts-import-plugin": "^1.6.7",
     "typescript": "~4.1.5",
     "vue-cli-plugin-style-resources-loader": "~0.1.5"
   },
