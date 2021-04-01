@@ -7,6 +7,7 @@
     <a-layout-content class="content">
       <doc-container />
       <a-anchor class="anchor">
+        <a-anchor-link href="#usage" title="安装使用" />
         <a-anchor-link href="#base-demo" title="基本用法" />
         <a-anchor-link href="#checkbox-demo" title="可勾选" />
         <a-anchor-link href="#async-dada-demo" title="异步加载" />
