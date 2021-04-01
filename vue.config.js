@@ -15,5 +15,5 @@ module.exports = {
       patterns: ['./src/assets/styles/variable.scss']
     }
   },
-  // publicPath: process.env.NODE_ENV === 'production' ? '/vue-virtual-tree/' : '/'
+  publicPath: process.env.NODE_ENV === 'production' ? '/vue-virtual-tree' : '/'
 }
