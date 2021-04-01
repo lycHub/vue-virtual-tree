@@ -1,15 +1,15 @@
 {
   "name": "vue-virtual-tree",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Tree component for large amount of data, base on Vue3",
   "scripts": {
     "serve": "vue-cli-service serve --port 4200",
     "build": "vue-cli-service build",
     "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && gulp"
   },
-  "main": "./lib/index.js",
+  "main": "./lib/vue-virtual-tree.common.js",
   "files": [
-    "lib"
+    "lib", "typings"
   ],
   "dependencies": {
     "core-js": "^3.6.5",
@@ -42,5 +42,6 @@
     "type": "git",
     "url": "https://github.com/lycHub/vue-virtual-tree.git"
   },
-  "homepage": "https://lychub.github.io/vue-virtual-tree"
+  "homepage": "https://lychub.github.io/vue-virtual-tree",
+  "typings": "typings/index.d.ts"
 }
