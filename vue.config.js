@@ -41,5 +41,6 @@ module.exports = {
       preProcessor: 'scss',
       patterns: ['./src/assets/styles/variable.scss']
     }
-  }
+  },
+  publicPath: process.env.NODE_ENV === 'production' ? '/vue-virtual-tree/' : '/'
 }
