@@ -1,5 +1,6 @@
 # vue-virtual-tree
-### Based on vue3 encapsulation, the tree component dedicated to large data volume, if the data volume is not large, using this component is a bit costly
+
+### Based on the tree component encapsulated by vue3 and dedicated to large data volume, if the data volume is not large, using this component is a bit wasteful
 
 English & [简体中文](README-CN.md)
 
@@ -28,20 +29,20 @@ Partial registration, you can get a complete type
 ``` js
 <template>
   <div class="demo">
-    <a-button @click="selectedNode">获取选中节点</a-button>
-    <vir-tree ref="virTree" :source="list" />
+    <vir-tree" :source="list" />
   </div>
 </template>
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
   import { VirTree } from 'vue-virtual-tree';
-  import {TreeInstance, TreeNodeOptions} from "vue-virtual-tree";
+  import {TreeNodeOptions} from "vue-virtual-tree/typings/VirtualTree/types";
 
   export default defineComponent({
     name: 'BaseDemo',
     components: { VirTree },
     setup(props, {emit}) {
+      const list = ref<TreeNodeOptions[]>([]);
       return {
         list
       }

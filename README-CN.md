@@ -1,5 +1,5 @@
 # vue-virtual-tree
-### 基于vue3封装的，大数据量专用的tree组件，如果数据量不大，用本组件有些让费了
+### 基于vue3封装的，大数据量专用的tree组件，如果数据量不大，用本组件有些浪费了
 
 [English](README.md) & 简体中文
 
@@ -28,20 +28,20 @@ In components:
 ``` js
 <template>
   <div class="demo">
-    <a-button @click="selectedNode">获取选中节点</a-button>
-    <vir-tree ref="virTree" :source="list" />
+    <vir-tree" :source="list" />
   </div>
 </template>
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
   import { VirTree } from 'vue-virtual-tree';
-  import {TreeInstance, TreeNodeOptions} from "vue-virtual-tree";
+  import {TreeNodeOptions} from "vue-virtual-tree/typings/VirtualTree/types";
 
   export default defineComponent({
     name: 'BaseDemo',
     components: { VirTree },
     setup(props, {emit}) {
+      const list = ref<TreeNodeOptions[]>([]);
       return {
         list
       }
