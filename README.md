@@ -5,6 +5,7 @@
 English & [简体中文](README-CN.md)
 
 ## [Docs & Demo](https://lychub.github.io/vue-virtual-tree)
+### [online demo](https://stackblitz.com/edit/vue-virtual-tree-demos?file=src/App.vue)
 
 
 ## How to use

@@ -23,12 +23,11 @@ export default defineComponent({
       let result = 'vir-checkbox';
       if (props.modelValue) {
         result += ' checked';
+      } else if (props.halfChecked) {
+        result += ' half-checked';
       }
       if (props.disabled) {
         result += ' disabled';
-      }
-      if (props.halfChecked) {
-        result += ' half-checked';
       }
       return result;
     });
