@@ -13,10 +13,6 @@ export default defineComponent({
       type: Array as PropType<TreeNodeOptions[]>,
       default: () => []
     },
-    readonly: {
-      type: Boolean,
-      default: false
-    },
     showCheckbox: {
       type: Boolean,
       default: false

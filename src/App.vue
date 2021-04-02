@@ -14,6 +14,7 @@
         <a-anchor-link href="#custom-node-demo" title="自定义渲染节点" />
         <a-anchor-link href="#custom-icon-demo" title="自定义图标" />
         <a-anchor-link href="#search-node-demo" title="搜索树" />
+        <a-anchor-link href="#api" title="API" />
       </a-anchor>
     </a-layout-content>
     <a-layout-footer class="footer">
