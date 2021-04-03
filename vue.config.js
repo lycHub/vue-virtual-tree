@@ -18,7 +18,7 @@ module.exports = {
     }
   },
   parallel: false,
-  // publicPath: process.env.NODE_ENV === 'production' ? '/vue-virtual-tree' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/vue-virtual-tree' : '/',
   chainWebpack(config) {
     config.module
       .rule('tsx')
