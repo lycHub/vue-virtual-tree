@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-tree",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Tree component for large amount of data, base on Vue3",
   "scripts": {
     "serve": "vue-cli-service serve --port 4200",
@@ -46,5 +46,6 @@
     "url": "https://github.com/lycHub/vue-virtual-tree.git"
   },
   "homepage": "https://lychub.github.io/vue-virtual-tree",
-  "typings": "typings/index.d.ts"
+  "typings": "typings/index.d.ts",
+  "license": "ISC"
 }

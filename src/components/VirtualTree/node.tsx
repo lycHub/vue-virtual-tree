@@ -1,8 +1,7 @@
 import {computed, defineComponent, PropType, Slot} from "vue";
-import {TreeNodeInstance, TreeNodeOptions} from "./types";
+import {TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
-import {useExpose} from "./uses";
 
 export default defineComponent({
   name: 'VirTreeNode',
@@ -23,7 +22,7 @@ export default defineComponent({
     render: Function
   },
   emits: ['select-change', 'toggle-expand', 'check-change'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const halfChecked = computed(() => {
       let result = false;
       if (!props.checkStrictly && props.node.hasChildren) {
@@ -86,7 +85,7 @@ export default defineComponent({
         }
       </div>;
     }
-    useExpose<TreeNodeInstance>({
+    expose({
       rawNode: props.node,
       halfChecked: () => halfChecked.value
     });

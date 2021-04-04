@@ -1,7 +1,7 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import cloneDeep from 'lodash.clonedeep';
-import {nodeKey, TreeInstance, TreeNodeInstance, TreeNodeOptions} from "./types";
-import {flattenTree, updateDownwards, updateUpwards, useExpose} from "./uses";
+import {nodeKey, TreeNodeInstance, TreeNodeOptions} from "./types";
+import { flattenTree, updateDownwards, updateUpwards } from "./uses";
 import VirTreeNode from './node';
 import VirtualList from '../VirtualList';
 import './index.scss';
@@ -33,7 +33,7 @@ export default defineComponent({
     render: Function
   },
   emits: ['selectChange', 'checkChange'],
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
     const loading = shallowRef(false);
     const selectedKey = ref<string | number>('');
     const flatList = ref<TreeNodeOptions[]>([]);
@@ -125,27 +125,13 @@ export default defineComponent({
         collapseNode(node);
       }
     }
-    /*const renderNodes = () => { // 普通变量没有响应式
-      return flatList.value.map(node => {
-        return <VirTreeNode
-          key={ node.nodeKey }
-          node={ node }
-          show-checkbox={ props.showCheckbox }
-          render={ props.render }
-          // @ts-ignore
-          onSelectChange={ selectChange }
-          onToggleExpand={ toggleExpand }
-          onCheckChange={ checkChange }
-        />
-      });
-    }*/
     const nodeRefs = ref<TreeNodeInstance[]>([]);
     const setRef = (index: number, node: any) => {
       if (node) {
         nodeRefs.value[index] = node as TreeNodeInstance;
       }
     }
-    useExpose<TreeInstance>({
+    expose({
       getSelectedNode: (): TreeNodeOptions | undefined => {
         return flatList.value.find(item => item.selected);
       },
