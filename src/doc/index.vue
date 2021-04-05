@@ -29,7 +29,7 @@
         <div class="custom-view">
           <a-typography-title :level="4">关于刷新整个tree</a-typography-title>
           <a-typography-paragraph>
-            处于新能考虑，tree内部监听 source时，并没有开启 <b>deep</b>
+            处于性能考虑，tree内部监听 source时，并没有开启 <b>deep</b>
             当你只改变source中的某个属性而view并未更新时，<b>可能需要改变source的引用，比如 list.value = list.value.slice()</b>
           </a-typography-paragraph>
         </div>
