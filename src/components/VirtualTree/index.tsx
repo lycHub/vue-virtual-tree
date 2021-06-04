@@ -151,7 +151,7 @@ export default defineComponent({
               class: ['vir-tree-wrap'],
               size: props.size,
               remain: props.remain,
-              list: flatList.value,
+              list: flatList,
               dataKey: 'nodeKey',
             }, {
               default: (data: { item: TreeNodeOptions, index: number }) => h(VirTreeNode, {
