@@ -39,7 +39,7 @@ export default defineComponent({
     const flatList = ref<TreeNodeOptions[]>([]);
     watch(() => props.source, newVal => {
       flatList.value = flattenTree(newVal);
-    }, { immediate: true });
+    }, { immediate: true, deep: true });
     const selectChange = (node: TreeNodeOptions) => {
       node.selected = !node.selected;
       if (selectedKey.value !== node.nodeKey) {
@@ -151,7 +151,7 @@ export default defineComponent({
               class: ['vir-tree-wrap'],
               size: props.size,
               remain: props.remain,
-              list: flatList,
+              list: flatList.value,
               dataKey: 'nodeKey',
             }, {
               default: (data: { item: TreeNodeOptions, index: number }) => h(VirTreeNode, {
