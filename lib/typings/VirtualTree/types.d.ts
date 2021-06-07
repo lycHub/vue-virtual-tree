@@ -11,7 +11,6 @@ interface TreeNodeOptions {
     hasChildren?: boolean;
     children?: TreeNodeOptions[];
     parentKey?: nodeKey | null;
-    [key: string]: any;
 }
 interface TreeInstance {
     getSelectedNode: () => TreeNodeOptions | undefined;

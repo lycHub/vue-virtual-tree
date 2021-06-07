@@ -2,7 +2,7 @@ import { PropType, Slot } from "vue";
 import { TreeNodeOptions } from "./types";
 declare const _default: import("vue").DefineComponent<{
     node: {
-        type: PropType<TreeNodeOptions>;
+        type: PropType<Required<TreeNodeOptions>>;
         required: true;
     };
     iconSlot: PropType<Slot>;
@@ -16,7 +16,7 @@ declare const _default: import("vue").DefineComponent<{
     };
     render: FunctionConstructor;
 }, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("select-change" | "toggle-expand" | "check-change")[], "select-change" | "toggle-expand" | "check-change", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
-    node: TreeNodeOptions;
+    node: Required<TreeNodeOptions>;
     showCheckbox: boolean;
     checkStrictly: boolean;
 } & {

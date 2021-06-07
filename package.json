@@ -5,9 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 4200",
     "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && gulp"
+    "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && tsc --project src/components/tsconfig.json"
   },
   "main": "./lib/vue-virtual-tree.common.js",
+  "typings": "lib/typings/index.d.ts",
   "files": [
     "lib",
     "typings"
@@ -27,9 +28,6 @@
     "ant-design-vue": "^2.1.2",
     "del": "^6.0.0",
     "express": "^4.17.1",
-    "gulp": "^4.0.2",
-    "gulp-rename": "^2.0.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "style-resources-loader": "^1.4.1",
@@ -46,6 +44,5 @@
     "url": "https://github.com/lycHub/vue-virtual-tree.git"
   },
   "homepage": "https://lychub.github.io/vue-virtual-tree",
-  "typings": "typings/index.d.ts",
   "license": "ISC"
 }

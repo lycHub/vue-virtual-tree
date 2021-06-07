@@ -13,12 +13,12 @@ declare const _default: import("vue").DefineComponent<{
         default: boolean;
     };
 }, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:modelValue" | "change")[], "update:modelValue" | "change", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
-    modelValue: boolean;
     disabled: boolean;
+    modelValue: boolean;
     halfChecked: boolean;
 } & {}>, {
-    modelValue: boolean;
     disabled: boolean;
+    modelValue: boolean;
     halfChecked: boolean;
 }>;
 export default _default;
