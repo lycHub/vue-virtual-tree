@@ -36,11 +36,11 @@ export default defineComponent({
   setup(props, { emit, slots, expose }) {
     const loading = shallowRef(false);
     const selectedKey = ref<string | number>('');
-    const flatList = ref<TreeNodeOptions[]>([]);
+    const flatList = ref<Required<TreeNodeOptions>[]>([]);
     watch(() => props.source, newVal => {
       flatList.value = flattenTree(newVal);
     }, { immediate: true });
-    const selectChange = (node: TreeNodeOptions) => {
+    const selectChange = (node: Required<TreeNodeOptions>) => {
       node.selected = !node.selected;
       if (selectedKey.value !== node.nodeKey) {
         const preSelectedIndex = flatList.value.findIndex(item => item.nodeKey === selectedKey.value);
@@ -54,7 +54,7 @@ export default defineComponent({
     }
 
 
-    const checkChange = ([checked, node]: [boolean, TreeNodeOptions]) => {
+    const checkChange = ([checked, node]: [boolean, Required<TreeNodeOptions>]) => {
       node.checked = checked;
       if (!props.checkStrictly) {
         updateDownwards(checked, node);
@@ -63,7 +63,7 @@ export default defineComponent({
       emit('checkChange', node);
     }
 
-    const expandNode = (node: TreeNodeOptions, children: TreeNodeOptions[] = []) => {
+    const expandNode = (node: Required<TreeNodeOptions>, children: TreeNodeOptions[] = []) => {
       const trueChildren = children.length ? children : cloneDeep(node.children)!;
       node.children = trueChildren.map(item => {
         item.loading = false;
@@ -78,18 +78,18 @@ export default defineComponent({
         return item;
       });
       const targetIndex = flatList.value.findIndex(item => item.nodeKey === node.nodeKey);
-      flatList.value.splice(targetIndex + 1, 0, ...node.children);
+      flatList.value.splice(targetIndex + 1, 0, ...(node.children as Required<TreeNodeOptions>[]));
     }
 
-    const collapseNode = (targetNode: TreeNodeOptions) => {
+    const collapseNode = (targetNode: Required<TreeNodeOptions>) => {
       const delKeys: nodeKey[] = [];
-      const recursion = (node: TreeNodeOptions) => {
+      const recursion = (node: Required<TreeNodeOptions>) => {
         if (node.children?.length) {
           node.children.forEach(item => {
             delKeys.push(item.nodeKey);
             if (item.expanded) {
               item.expanded = false;
-              recursion(item);
+              recursion(item as Required<TreeNodeOptions>);
             }
           });
         }
@@ -100,7 +100,7 @@ export default defineComponent({
       }
     }
 
-    const toggleExpand = (node: TreeNodeOptions) => {
+    const toggleExpand = (node: Required<TreeNodeOptions>) => {
       if (loading.value) return;
       // console.log('expand node');
       node.expanded = !node.expanded;
@@ -154,7 +154,7 @@ export default defineComponent({
               list: flatList.value,
               dataKey: 'nodeKey',
             }, {
-              default: (data: { item: TreeNodeOptions, index: number }) => h(VirTreeNode, {
+              default: (data: { item: Required<TreeNodeOptions>, index: number }) => h(VirTreeNode, {
                 ref: setRef.bind(null, data.index),
                 node: data.item,
                 showCheckbox: props.showCheckbox,

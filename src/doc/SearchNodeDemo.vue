@@ -10,21 +10,26 @@
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
   import {TreeNodeOptions} from "../components/VirtualTree/types";
+
+  interface TreeNodeOptionsWithParentPath extends TreeNodeOptions {
+    parentPath: Array<string | number>;
+  }
+
   const UNIQUE_WRAPPERS = ['##==-open_tag-==##', '##==-close_tag-==##'];
   let expandKeys: Array<string | number> = [];
-  function getParentPath (parent: TreeNodeOptions | null): Array<string | number> {
-    let result = [];
+  function getParentPath (parent: TreeNodeOptionsWithParentPath | null): Array<string | number> {
+    let result: Array<string | number> = [];
     if (parent) {
       const base = parent.parentPath || [];
       result = base.concat(parent.nodeKey);
     }
     return result;
   }
-  function recursion(path = '0', level = 3, parent: TreeNodeOptions | null = null): TreeNodeOptions[] {
+  function recursion(path = '0', level = 3, parent: TreeNodeOptionsWithParentPath | null = null): TreeNodeOptionsWithParentPath[] {
     const list = [];
     for (let i = 0; i < 10; i++) {
       const nodeKey = `${path}-${i}`;
-      const treeNode: TreeNodeOptions = {
+      const treeNode: TreeNodeOptionsWithParentPath = {
         nodeKey,
         name: nodeKey,
         children: [],
@@ -48,7 +53,7 @@
     name: 'SearchNodeDemo',
     setup(prop, {emit}) {
       const keywords = ref('');
-      const list = ref<TreeNodeOptions[]>([]);
+      const list = ref<TreeNodeOptionsWithParentPath[]>([]);
 
       onMounted(() => {
         list.value = recursion();
@@ -57,9 +62,9 @@
       const formatSearchValue = (value: string) => {
         return new RegExp(value.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$&'), 'i');
       }
-      const findMatchedNodes = (keywords: string): TreeNodeOptions[] => {
-        const result: TreeNodeOptions[] = [];
-        const recursion = (list: TreeNodeOptions[], parent: TreeNodeOptions | null = null) => {
+      const findMatchedNodes = (keywords: string): TreeNodeOptionsWithParentPath[] => {
+        const result: TreeNodeOptionsWithParentPath[] = [];
+        const recursion = (list: TreeNodeOptionsWithParentPath[], parent: TreeNodeOptionsWithParentPath | null = null) => {
           for (const item of list) {
             const matched = formatSearchValue(keywords).test(item.name);
             if (matched) {
@@ -69,7 +74,7 @@
               parent.expanded = matched;
             }
             if (item.children?.length) {
-              recursion(item.children, item);
+              recursion(item.children as TreeNodeOptionsWithParentPath[], item);
             }
           }
         }

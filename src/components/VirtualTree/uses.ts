@@ -1,26 +1,25 @@
 import { getCurrentInstance } from "vue";
 import {TreeNodeOptions} from "./types";
 
-function flattenTree(source: TreeNodeOptions[]): TreeNodeOptions[] {
-  const result: TreeNodeOptions[] = [];
-  function recursion (list: TreeNodeOptions[], level = 0, parent: TreeNodeOptions | null = null) {
+function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
+  const result: Required<TreeNodeOptions>[] = [];
+  function recursion (list: TreeNodeOptions[], level = 0, parent: Required<TreeNodeOptions> | null = null) {
     return list.map(item => {
-      const flatNode = {
+      const flatNode: Required<TreeNodeOptions> = {
         ...item,
         level,
         loading: false,
         disabled: item.disabled || false,
-        expand: item.expanded || false,
+        expanded: item.expanded || false,
         selected: item.selected || false,
         checked: item.checked || parent?.checked || false,
         hasChildren: item.hasChildren || false,
-        parentKey: parent?.nodeKey || null
+        parentKey: parent?.nodeKey || null,
+        children: item.children || []
       };
       result.push(flatNode);
       if (item.expanded && item.children?.length) {
         flatNode.children = recursion(item.children, level + 1, flatNode);
-      } else {
-        flatNode.children = flatNode.children || [];
       }
       return flatNode;
     });
@@ -31,22 +30,22 @@ function flattenTree(source: TreeNodeOptions[]): TreeNodeOptions[] {
 }
 
 
-function updateDownwards(checked: boolean, node: TreeNodeOptions) {
-  const update = (children: TreeNodeOptions[]) => {
+function updateDownwards(checked: boolean, node: Required<TreeNodeOptions>) {
+  const update = (children: Required<TreeNodeOptions>[]) => {
     if (children.length) {
       children.forEach(child => {
         child.checked = checked;
         if (child.children?.length) {
-          update(child.children);
+          update(child.children as Required<TreeNodeOptions>[]);
         }
       });
     }
   }
-  update(node.children!);
+  update(node.children as Required<TreeNodeOptions>[]);
 }
 
-function updateUpwards(targetNode: TreeNodeOptions, flatList: TreeNodeOptions[]) {
-  const update = (node: TreeNodeOptions) => {
+function updateUpwards(targetNode: Required<TreeNodeOptions>, flatList: Required<TreeNodeOptions>[]) {
+  const update = (node: Required<TreeNodeOptions>) => {
     if (node.parentKey != null) { // 说明是子节点
       const parentNode = flatList.find(item => item.nodeKey == node.parentKey)!;
       // console.log('parentNode', parentNode);
@@ -60,12 +59,4 @@ function updateUpwards(targetNode: TreeNodeOptions, flatList: TreeNodeOptions[])
   update(targetNode);
 }
 
-
-function useExpose<T>(apis: T) {
-  const instance = getCurrentInstance();
-  if (instance) {
-    Object.assign(instance.proxy, apis);
-  }
-}
-
-export { flattenTree, updateUpwards, updateDownwards, useExpose };
+export { flattenTree, updateUpwards, updateDownwards };

@@ -7,7 +7,7 @@ export default defineComponent({
   name: 'VirTreeNode',
   props: {
     node: {
-      type: Object as PropType<TreeNodeOptions>,
+      type: Object as PropType<Required<TreeNodeOptions>>,
       required: true
     },
     iconSlot: Function as PropType<Slot>,
