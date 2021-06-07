@@ -5,14 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 4200",
     "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && tsc --project src/components/tsconfig.json"
+    "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && npm run build:types",
+    "build:types": "tsc --project src/components/tsconfig.json"
   },
   "main": "./lib/vue-virtual-tree.common.js",
   "typings": "lib/typings/index.d.ts",
-  "files": [
-    "lib",
-    "typings"
-  ],
+  "files": ["lib"],
   "dependencies": {
     "core-js": "^3.6.5",
     "lodash.clonedeep": "^4.5.0"
