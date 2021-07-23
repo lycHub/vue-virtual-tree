@@ -1,8 +1,6 @@
 name: GitHub Actions Build and Deploy
 on:
   push:
-    tags:
-      - 'v*'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
