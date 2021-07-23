@@ -47,14 +47,6 @@
       content: " ";
     }
   }
-  &.disabled {
-    color: $disable-color;
-    cursor: not-allowed;
-    .inner {
-      border-color: $disable-color;
-      background-color: $disable-color;
-    }
-  }
   &.checked {
     .inner {
       border-color: $primary-color;
@@ -62,6 +54,17 @@
       &:after {
         transform: rotate(45deg);
         opacity: 1;
+      }
+    }
+  }
+  &.disabled {
+    color: $disable-color;
+    cursor: not-allowed;
+    .inner {
+      border-color: $disable-color;
+      background-color: $disable-color;
+      &:after {
+        //background-color: $disable-color;
       }
     }
   }

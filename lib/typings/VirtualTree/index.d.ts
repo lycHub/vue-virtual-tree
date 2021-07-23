@@ -24,7 +24,7 @@ declare const _default: import("vue").DefineComponent<{
     };
     loadData: PropType<(node: TreeNodeOptions, callback: (children: TreeNodeOptions[]) => void) => void>;
     render: FunctionConstructor;
-}, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("selectChange" | "checkChange")[], "selectChange" | "checkChange", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
+}, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("selectChange" | "toggleExpand" | "checkChange")[], "selectChange" | "toggleExpand" | "checkChange", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
     source: TreeNodeOptions[];
     showCheckbox: boolean;
     checkStrictly: boolean;

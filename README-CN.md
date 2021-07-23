@@ -35,7 +35,7 @@ In components:
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
   import { VirTree } from 'vue-virtual-tree';
-  import {TreeNodeOptions} from "vue-virtual-tree/typings/VirtualTree/types";
+  import {TreeNodeOptions} from "vue-virtual-tree/lib/typings/VirtualTree/types";
 
   export default defineComponent({
     name: 'BaseDemo',

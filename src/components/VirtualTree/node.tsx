@@ -21,7 +21,7 @@ export default defineComponent({
     },
     render: Function
   },
-  emits: ['select-change', 'toggle-expand', 'check-change'],
+  emits: ['selectChange', 'toggleExpand', 'checkChange'],
   setup(props, { emit, expose }) {
     const halfChecked = computed(() => {
       let result = false;
@@ -44,14 +44,14 @@ export default defineComponent({
     });
     const handleSelect = () => {
       if (!props.node.disabled) {
-        emit('select-change', props.node);
+        emit('selectChange', props.node);
       }
     }
     const handleExpand = () => {
-      emit('toggle-expand', props.node);
+      emit('toggleExpand', props.node);
     }
     const handleCheckChange = (checked: boolean) => {
-      emit('check-change', [checked, props.node])
+      emit('checkChange', [checked, props.node])
     }
     const renderArrow = (): JSX.Element | null => {
       return <div class={ ['node-arrow', props.node.expanded ? 'expanded' : ''] } onClick={ handleExpand }>

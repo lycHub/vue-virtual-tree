@@ -36,7 +36,7 @@
 
   export default defineComponent({
     name: 'BaseDemo',
-    setup(prop, {emit}) {
+    setup() {
       const list = ref<TreeNodeOptions[]>([]);
       const virTree = ref<TreeInstance | null>(null);
       onMounted(() => {

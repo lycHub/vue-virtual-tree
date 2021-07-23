@@ -42,7 +42,7 @@
 
   export default defineComponent({
     name: 'CheckboxDemo',
-    setup(prop, {emit}) {
+    setup() {
       const list = ref<TreeNodeOptions[]>([]);
       const virTreeOne = ref<TreeInstance | null>(null);
       const virTreeTwo = ref<TreeInstance | null>(null);

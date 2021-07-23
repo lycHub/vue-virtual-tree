@@ -32,7 +32,7 @@ export default defineComponent({
     loadData: Function as PropType<(node: TreeNodeOptions, callback: (children: TreeNodeOptions[]) => void) => void>,
     render: Function
   },
-  emits: ['selectChange', 'checkChange'],
+  emits: ['selectChange', 'checkChange', 'toggleExpand'],
   setup(props, { emit, slots, expose }) {
     const loading = shallowRef(false);
     const selectedKey = ref<string | number>('');
@@ -49,7 +49,10 @@ export default defineComponent({
         }
         node.selected = true;
         selectedKey.value = node.nodeKey;
-        emit('selectChange', node);
+        emit('selectChange', {
+          preSelectedNode: flatList.value[preSelectedIndex],
+          node
+        });
       }
     }
 
@@ -60,7 +63,7 @@ export default defineComponent({
         updateDownwards(checked, node);
         updateUpwards(node, flatList.value);
       }
-      emit('checkChange', node);
+      emit('checkChange', { checked, node });
     }
 
     const expandNode = (node: Required<TreeNodeOptions>, children: TreeNodeOptions[] = []) => {
@@ -124,6 +127,7 @@ export default defineComponent({
       } else {
         collapseNode(node);
       }
+      emit('toggleExpand', { status: node.expanded, node });
     }
     const nodeRefs = ref<TreeNodeInstance[]>([]);
     const setRef = (index: number, node: any) => {
