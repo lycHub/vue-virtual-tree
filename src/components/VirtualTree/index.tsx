@@ -1,5 +1,5 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
-import cloneDeep from 'lodash.clonedeep';
+import { cloneDeep } from 'lodash-es';
 import {nodeKey, TreeNodeInstance, TreeNodeOptions} from "./types";
 import { flattenTree, updateDownwards, updateUpwards } from "./uses";
 import VirTreeNode from './node';

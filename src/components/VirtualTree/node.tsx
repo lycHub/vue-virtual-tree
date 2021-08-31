@@ -42,7 +42,8 @@ export default defineComponent({
       }
       return result;
     });
-    const handleSelect = () => {
+    const handleSelect = (event: MouseEvent) => {
+      event.stopPropagation();
       if (!props.node.disabled) {
         emit('selectChange', props.node);
       }
@@ -54,7 +55,7 @@ export default defineComponent({
       emit('checkChange', [checked, props.node])
     }
     const renderArrow = (): JSX.Element | null => {
-      return <div class={ ['node-arrow', props.node.expanded ? 'expanded' : ''] } onClick={ handleExpand }>
+      return <div class={ ['node-arrow', props.node.expanded ? 'expanded' : ''] }>
         {
           props.node.hasChildren
             ? props.iconSlot ? props.iconSlot(props.node.loading) : props.node.loading
@@ -92,7 +93,7 @@ export default defineComponent({
     // console.log('iconSlot', props.iconSlot);
     return () => {
       return (
-        <div class="vir-tree-node" style={{ paddingLeft: props.node.level! * 18 + 'px' }}>
+        <div class="vir-tree-node" onClick={ handleExpand } style={{ paddingLeft: props.node.level! * 18 + 'px' }}>
           { renderArrow() }
           { renderContent() }
         </div>

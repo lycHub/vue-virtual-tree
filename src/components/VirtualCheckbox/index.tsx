@@ -31,7 +31,8 @@ export default defineComponent({
       }
       return result;
     });
-    const handleClick = () => {
+    const handleClick = (event: MouseEvent) => {
+      event.stopPropagation();
       if (!props.disabled) {
         emit('update:modelValue', !props.modelValue);
         emit('change', !props.modelValue);

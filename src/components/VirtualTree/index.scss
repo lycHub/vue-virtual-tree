@@ -13,7 +13,10 @@
       cursor: pointer;
       transition: all .2s ease-in-out;
       &:hover {
-        color: $primary-color;
+        .node-content .node-title {
+          color: $primary-color;
+        }
+        background-color: $gray-color-tree;
       }
       .node-arrow {
         display: inline-block;
