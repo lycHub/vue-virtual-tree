@@ -10,9 +10,7 @@
   },
   "main": "./lib/vue-virtual-tree.common.js",
   "typings": "lib/typings/index.d.ts",
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "dependencies": {
     "core-js": "^3.6.5",
     "lodash-es": "^4.17.21"
