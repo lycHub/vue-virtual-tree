@@ -36,8 +36,7 @@ Partial registration, you can get a complete type
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
-  import { VirTree } from 'vue-virtual-tree';
-  import {TreeNodeOptions} from "vue-virtual-tree/lib/typings/VirtualTree/types";
+  import { VirTree, TreeNodeOptions } from 'vue-virtual-tree';
 
   export default defineComponent({
     name: 'BaseDemo',
