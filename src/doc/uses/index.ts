@@ -1,5 +1,5 @@
 import { message } from 'ant-design-vue';
-import {TreeInstance, TreeNodeOptions} from '../../components/VirtualTree/types';
+import {TreeInstance, TreeNodeOptions} from '../../components';
 
 
 function getSelectedNode(tree: TreeInstance) {

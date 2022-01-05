@@ -9,7 +9,7 @@
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
-  import {TreeNodeOptions} from "../components/VirtualTree/types";
+  import {TreeNodeOptions} from "../components";
 
   interface TreeNodeOptionsWithParentPath extends TreeNodeOptions {
     parentPath: Array<string | number>;

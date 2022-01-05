@@ -41,7 +41,6 @@ export default defineComponent({
       flatList.value = flattenTree(newVal);
     }, { immediate: true });
     const selectChange = (node: Required<TreeNodeOptions>) => {
-      node.selected = !node.selected;
       if (selectedKey.value !== node.nodeKey) {
         const preSelectedIndex = flatList.value.findIndex(item => item.nodeKey === selectedKey.value);
         if (preSelectedIndex > -1) {
@@ -52,6 +51,12 @@ export default defineComponent({
         emit('selectChange', {
           preSelectedNode: flatList.value[preSelectedIndex],
           node
+        });
+      } else {
+        node.selected = false;
+        emit('selectChange', {
+          preSelectedNode: node,
+          node: null
         });
       }
     }
