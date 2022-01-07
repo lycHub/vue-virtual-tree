@@ -1,7 +1,13 @@
 <template>
   <div class="demo">
     <a-button @click="selectedNode">获取选中节点</a-button>
-    <vir-tree ref="virTree" :source="list" :default-expanded-keys="defaultExpandedKeys" />
+    <vir-tree
+      ref="virTree"
+      :source="list"
+      :default-disabled-keys="defaultDisabledKeys"
+      :default-selected-key="defaultSelectedKey"
+      :default-expanded-keys="defaultExpandedKeys"
+    />
   </div>
 </template>
 
@@ -38,6 +44,8 @@
       const list = ref<TreeNodeOptions[]>([]);
       const virTree = ref<TreeInstance | null>(null);
       const defaultExpandedKeys = ['0-0', '0-1', '0-1-0'];
+      const defaultSelectedKey = '0-0-1-0';
+      const defaultDisabledKeys = ['0-0-1'];
       onMounted(() => {
         list.value = recursion();
       });
@@ -48,7 +56,9 @@
         list,
         virTree,
         selectedNode,
-        defaultExpandedKeys
+        defaultExpandedKeys,
+        defaultSelectedKey,
+        defaultDisabledKeys
       }
     }
   });

@@ -1,18 +1,11 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import { cloneDeep } from 'lodash-es';
 import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
-import {
-  checkedNodes,
-  disabledKeys,
-  expandedKeys,
-  flattenTree,
-  selectedNodes,
-  updateDownwards,
-  updateUpwards
-} from "./uses";
+
 import VirTreeNode from './node';
 import VirtualList from '../VirtualList';
 import './index.scss';
+import {TreeService} from "./service";
 
 export default defineComponent({
   name: 'VirTree',
@@ -25,7 +18,15 @@ export default defineComponent({
       type: Array as PropType<NodeKey[]>,
       default: () => []
     },
+    defaultSelectedKey: {
+      type: [String, Number],
+      default: ''
+    },
     defaultCheckedKeys: {
+      type: Array as PropType<NodeKey[]>,
+      default: () => []
+    },
+    defaultDisabledKeys: {
       type: Array as PropType<NodeKey[]>,
       default: () => []
     },
@@ -52,18 +53,22 @@ export default defineComponent({
   setup: function (props, {emit, slots, expose}) {
     const loading = shallowRef(false);
     const flatList = ref<Required<TreeNodeOptions>[]>([]);
+
+    const service = new TreeService();
+
     watch(() => props.source, newVal => {
-      flatList.value = flattenTree(newVal, props.defaultCheckedKeys, props.defaultExpandedKeys);
-      console.log('expandedKeys>>', expandedKeys.value.selected);
+      flatList.value = service.flattenTree(newVal, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
+      // console.log('expandedKeys>>', expandedKeys.value.selected);
     }, {immediate: true});
     const selectChange = (node: Required<TreeNodeOptions>) => {
-      const preSelectedNode = selectedNodes.value.selected[0];
+      const preSelectedNode = service.selectedNodes.value.selected[0];
       let currentNode: TypeWithNull<TreeNodeOptions> = node;
-      if (selectedNodes.value.isSelected(node)) {
-        selectedNodes.value.clear();
+      if (service.selectedNodes.value.isSelected(node)) {
+        service.selectedNodes.value.clear();
         currentNode = null;
+        service.defaultSelectedKey = '';
       } else {
-        selectedNodes.value.select(node);
+        service.selectedNodes.value.select(node);
       }
       emit('selectChange', {
         preSelectedNode,
@@ -73,27 +78,44 @@ export default defineComponent({
 
 
     const checkChange = ([checked, node]: [boolean, Required<TreeNodeOptions>]) => {
-      checkedNodes.value.toggle(node);
+      service.checkedNodes.value.toggle(node);
+      if (!checked) {
+        service.removeDefaultCheckedKeys(node);
+      }
+
       if (!props.checkStrictly) {
-        updateDownwards(checked, node);
-        updateUpwards(node, flatList.value);
+        service.updateDownwards(checked, node);
+        service.updateUpwards(node, flatList.value);
       }
       emit('checkChange', {checked, node});
     }
 
     const expandNode = (node: Required<TreeNodeOptions>, children: TreeNodeOptions[] = []) => {
       const trueChildren = children.length ? children : cloneDeep(node.children)!;
-      node.children = trueChildren.map(item => {
+      node.children = (trueChildren as Required<TreeNodeOptions>[]).map(item => {
         item.loading = false;
         item.level = item.level || node.level! + 1;
         item.children = item.children || [];
         item.hasChildren = item.hasChildren || false;
         item.parentKey = node.nodeKey || null;
-        if (props.defaultCheckedKeys.includes(item.nodeKey)) {
-          checkedNodes.value.select(item as Required<TreeNodeOptions>);
+
+        if (props.defaultDisabledKeys.includes(item.nodeKey)) {
+          service.disabledKeys.value.select(item.nodeKey);
         }
-        if (props.defaultExpandedKeys.includes(item.nodeKey)) {
-          expandedKeys.value.select(item.nodeKey);
+
+        const selectedKey = service.selectedNodes.value.selected[0]?.nodeKey || service.defaultSelectedKey;
+        if (selectedKey === item.nodeKey) {
+          service.selectedNodes.value.select(item as Required<TreeNodeOptions>);
+        }
+
+        const allCheckedKeys = service.checkedNodes.value.selected.map(item => item.nodeKey).concat(service.defaultCheckedKeys);
+        if (allCheckedKeys.includes(item.nodeKey) || (!props.checkStrictly && service.checkedNodes.value.isSelected(node))) {
+          service.checkedNodes.value.select(item as Required<TreeNodeOptions>);
+        }
+
+        const allExpandedKeys = service.expandedKeys.value.selected.concat(service.defaultExpandedKeys);
+        if (allExpandedKeys.includes(item.nodeKey)) {
+          service.expandedKeys.value.select(item.nodeKey);
         }
         return item;
       });
@@ -107,8 +129,9 @@ export default defineComponent({
         if (node.children?.length) {
           (node.children as Required<TreeNodeOptions>[]).forEach(item => {
             delKeys.push(item.nodeKey);
-            if (expandedKeys.value.isSelected(item.nodeKey)) {
-              expandedKeys.value.deselect(item.nodeKey);
+            if (service.expandedKeys.value.isSelected(item.nodeKey)) {
+              service.expandedKeys.value.deselect(item.nodeKey);
+              service.removeDefaultExpandedKeys(item.nodeKey);
               recursion(item as Required<TreeNodeOptions>);
             }
           });
@@ -122,8 +145,8 @@ export default defineComponent({
 
     const toggleExpand = (node: Required<TreeNodeOptions>) => {
       if (loading.value) return;
-      expandedKeys.value.toggle(node.nodeKey);
-      if (expandedKeys.value.isSelected(node.nodeKey)) {
+      service.expandedKeys.value.toggle(node.nodeKey);
+      if (service.expandedKeys.value.isSelected(node.nodeKey)) {
         if (node.children?.length) {
           expandNode(node);
         } else {
@@ -141,9 +164,10 @@ export default defineComponent({
           }
         }
       } else {
+        service.removeDefaultExpandedKeys(node.nodeKey);
         collapseNode(node);
       }
-      emit('toggleExpand', { status: expandedKeys.value.isSelected(node.nodeKey), node });
+      emit('toggleExpand', { status: service.expandedKeys.value.isSelected(node.nodeKey), node });
     }
     const nodeRefs = ref<TreeNodeInstance[]>([]);
     const setRef = (index: number, node: any) => {
@@ -153,16 +177,16 @@ export default defineComponent({
     }
     expose({
       getSelectedNode: (): TypeWithUndefined<TreeNodeOptions> => {
-        return selectedNodes.value.selected[0];
+        return service.selectedNodes.value.selected[0];
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
-        return checkedNodes.value.selected;
+        return service.checkedNodes.value.selected;
       },
       getHalfCheckedNodes: (): TreeNodeOptions[] => {
         return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);
       },
       getExpandedKeys: (): NodeKey[] => {
-        return expandedKeys.value.selected;
+        return service.expandedKeys.value.selected;
       }
     });
 
@@ -181,10 +205,10 @@ export default defineComponent({
               default: (data: { item: Required<TreeNodeOptions>, index: number }) => h(VirTreeNode, {
                 ref: setRef.bind(null, data.index),
                 node: data.item,
-                selectedNodes: selectedNodes.value,
-                checkedNodes: checkedNodes.value,
-                expandedKeys: expandedKeys.value,
-                disabledKeys: disabledKeys.value,
+                selectedNodes: service.selectedNodes.value,
+                checkedNodes: service.checkedNodes.value,
+                expandedKeys: service.expandedKeys.value,
+                disabledKeys: service.disabledKeys.value,
                 showCheckbox: props.showCheckbox,
                 checkStrictly: props.checkStrictly,
                 iconSlot: slots.icon,
