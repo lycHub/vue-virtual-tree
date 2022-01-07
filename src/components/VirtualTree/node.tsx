@@ -1,4 +1,4 @@
-import {computed, defineComponent, PropType, Slot} from "vue";
+import {computed, defineComponent, PropType, Slot, watch} from "vue";
 import {NodeKey, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
@@ -40,10 +40,11 @@ export default defineComponent({
   },
   emits: ['selectChange', 'toggleExpand', 'checkChange'],
   setup(props, { emit, expose }) {
-    /*watch(() => props.selectedNodes, newVal => {
-      console.log('wat selection', newVal?.selected);
+    /*watch(() => props.checkedNodes, newVal => {
+      console.log('wat checkedNodes', newVal.selected);
     }, {
-      deep: true
+      deep: true,
+      immediate: true
     });*/
     const halfChecked = computed(() => {
       let result = false;

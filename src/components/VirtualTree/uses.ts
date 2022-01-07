@@ -7,7 +7,11 @@ const checkedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>(true));
 const expandedKeys = ref(new SelectionModel<NodeKey>(true));
 const disabledKeys = ref(new SelectionModel<NodeKey>(true));
 
-function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
+function flattenTree(
+  source: TreeNodeOptions[],
+  defaultCheckedKeys: NodeKey[],
+  defaultExpandedKeys: NodeKey[],
+): Required<TreeNodeOptions>[] {
   const result: Required<TreeNodeOptions>[] = [];
   function recursion (list: TreeNodeOptions[], level = 0, parent: Required<TreeNodeOptions> | null = null) {
     return list.map(item => {
@@ -20,7 +24,11 @@ function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
         children: item.children || []
       };
       result.push(flatNode);
-      if (expandedKeys.value.isSelected(item.nodeKey) && item.children?.length) {
+      if (defaultCheckedKeys.includes(item.nodeKey)) {
+        checkedNodes.value.select(flatNode);
+      }
+      if (defaultExpandedKeys.includes(item.nodeKey) && item.children?.length) {
+        expandedKeys.value.select(item.nodeKey);
         flatNode.children = recursion(item.children, level + 1, flatNode);
       }
       return flatNode;

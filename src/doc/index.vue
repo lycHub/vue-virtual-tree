@@ -40,11 +40,48 @@
       <a-row :gutter="16" class="demo-boxes">
         <a-col :span="12">
           <demo-box
+            id="base-demo"
+            title="基本用法"
+            desc="展开、选中、禁用的基本功能aa"
+            code-type="base">
+            <base-demo />
+          </demo-box>
+          <demo-box
+            id="async-dada-demo"
+            title="异步加载数据"
+            desc="点击展开节点，动态加载数据。"
+            code-type="asyncData">
+            <async-data-demo />
+          </demo-box>
+          <demo-box
+            id="custom-icon-demo"
+            title="自定义图标"
+            desc="自定义展开、收起图标"
+            code-type="customIcon">
+            <custom-icon-demo />
+          </demo-box>
+        </a-col>
+        <a-col :span="12">
+          <demo-box
             id="checkbox-demo"
             title="可勾选"
             desc="showCheckbox属性开启勾选，默认父子节点联动，设置checkStrictly属性，可让父子节点不做联动"
             code-type="checkbox">
             <checkbox-demo />
+          </demo-box>
+          <demo-box
+            id="custom-node-demo"
+            title="自定义渲染节点"
+            desc="绑定render函数自定义节点，参数data为当前node数据。注意：如果改变了默认的高度(size), 需要传入size属性"
+            code-type="customNode">
+            <custom-node-demo />
+          </demo-box>
+          <demo-box
+            id="search-node-demo"
+            title="搜索树"
+            desc="虽然组件内部没有直接提供，但可以配合render自行实现"
+            code-type="searchNode">
+            <search-node-demo />
           </demo-box>
         </a-col>
       </a-row>

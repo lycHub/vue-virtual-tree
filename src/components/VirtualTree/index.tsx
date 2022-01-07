@@ -21,6 +21,14 @@ export default defineComponent({
       type: Array as PropType<TreeNodeOptions[]>,
       default: () => []
     },
+    defaultExpandedKeys: {
+      type: Array as PropType<NodeKey[]>,
+      default: () => []
+    },
+    defaultCheckedKeys: {
+      type: Array as PropType<NodeKey[]>,
+      default: () => []
+    },
     showCheckbox: {
       type: Boolean,
       default: false
@@ -42,12 +50,11 @@ export default defineComponent({
   },
   emits: ['selectChange', 'checkChange', 'toggleExpand'],
   setup: function (props, {emit, slots, expose}) {
-
     const loading = shallowRef(false);
     const flatList = ref<Required<TreeNodeOptions>[]>([]);
     watch(() => props.source, newVal => {
-      flatList.value = flattenTree(newVal);
-      // console.log(selectedNodes.value);
+      flatList.value = flattenTree(newVal, props.defaultCheckedKeys, props.defaultExpandedKeys);
+      console.log('expandedKeys>>', expandedKeys.value.selected);
     }, {immediate: true});
     const selectChange = (node: Required<TreeNodeOptions>) => {
       const preSelectedNode = selectedNodes.value.selected[0];
@@ -82,6 +89,12 @@ export default defineComponent({
         item.children = item.children || [];
         item.hasChildren = item.hasChildren || false;
         item.parentKey = node.nodeKey || null;
+        if (props.defaultCheckedKeys.includes(item.nodeKey)) {
+          checkedNodes.value.select(item as Required<TreeNodeOptions>);
+        }
+        if (props.defaultExpandedKeys.includes(item.nodeKey)) {
+          expandedKeys.value.select(item.nodeKey);
+        }
         return item;
       });
       const targetIndex = flatList.value.findIndex(item => item.nodeKey === node.nodeKey);
