@@ -47,10 +47,6 @@
       const defaultSelectedKey = ref('0-0-1-0');
       const defaultDisabledKeys = ref(['0-0-1']);
 
-      setTimeout(() => {
-        defaultDisabledKeys.value = ['0-1', '0-0-2'];
-      }, 5000);
-
       onMounted(() => {
         list.value = recursion();
       });

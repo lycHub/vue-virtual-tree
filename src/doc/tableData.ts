@@ -14,6 +14,10 @@ const columns = [
   {
     title: '默认值',
     dataIndex: 'defaultValue'
+  },
+  {
+    title: '版本号',
+    dataIndex: 'version'
   }
 ];
 const methodColumns = [
@@ -28,6 +32,10 @@ const methodColumns = [
   {
     title: '参数',
     dataIndex: 'type'
+  },
+  {
+    title: '版本号',
+    dataIndex: 'version'
   }
 ];
 
@@ -73,7 +81,35 @@ const propData = [
     description: '自定义渲染节点',
     type: '() => JSX.Element',
     defaultValue: 'undefined'
-  }
+  },
+  {
+    argument: 'defaultExpandedKeys',
+    description: '默认展开的nodeKey数组',
+    type: 'Array<string | number>',
+    defaultValue: '[]',
+    version: '2.0.0'
+  },
+  {
+    argument: 'defaultDisabledKeys',
+    description: '默认禁用的nodeKey数组',
+    type: 'Array<string | number>',
+    defaultValue: '[]',
+    version: '2.0.0'
+  },
+  {
+    argument: 'defaultCheckedKeys',
+    description: '默认勾选的nodeKey数组',
+    type: 'Array<string | number>',
+    defaultValue: '[]',
+    version: '2.0.0'
+  },
+  {
+    argument: 'defaultSelectedKey',
+    description: '默认选中的nodeKey',
+    type: 'string | number',
+    defaultValue: '',
+    version: '2.0.0'
+  },
 ];
 const eventData = [
   {
@@ -96,17 +132,23 @@ const methodData = [
   {
     name: 'getSelectedNode',
     description: '获取选中的节点',
-    type: '() => TreeNodeOptions | undefined;'
+    type: '() => TreeNodeOptions | undefined'
   },
   {
     name: 'getCheckedNodes',
     description: '获取已勾选的节点',
-    type: '() => TreeNodeOptions;'
+    type: '() => TreeNodeOptions'
   },
   {
     name: 'getHalfCheckedNodes',
     description: '获取半勾选的节点',
-    type: '() => TreeNodeOptions;'
+    type: '() => TreeNodeOptions'
+  },
+  {
+    name: 'getExpandedKeys',
+    description: '获取已展开的nodeKeys',
+    type: '() => Array<string | number>',
+    version: '2.0.0'
   }
 ];
 const nodeOptionData = [
@@ -140,25 +182,29 @@ const nodeOptionData = [
     argument: 'disabled',
     description: '是否禁用',
     type: 'boolean',
-    defaultValue: 'false'
+    defaultValue: 'false',
+    version: '2.0.0已废弃'
   },
   {
     argument: 'expanded',
     description: '是否展开',
     type: 'boolean',
-    defaultValue: 'false'
+    defaultValue: 'false',
+    version: '2.0.0已废弃'
   },
   {
     argument: 'selected',
     description: '是否选中',
     type: 'boolean',
-    defaultValue: 'false'
+    defaultValue: 'false',
+    version: '2.0.0已废弃'
   },
   {
     argument: 'checked',
     description: '是否勾选',
     type: 'boolean',
-    defaultValue: 'false'
+    defaultValue: 'false',
+    version: '2.0.0已废弃'
   },
   {
     argument: 'children',

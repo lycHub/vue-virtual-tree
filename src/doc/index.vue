@@ -42,7 +42,7 @@
           <demo-box
             id="base-demo"
             title="基本用法"
-            desc="展开、选中、禁用的基本功能aa"
+            desc="展开、选中、禁用的基本功能"
             code-type="base">
             <base-demo />
           </demo-box>
@@ -98,7 +98,13 @@
       <a-table :columns="methodColumns" :data-source="methodData" rowKey="argument" :pagination="false" />
       <br />
       <a-typography-title :level="4">TreeNodeOptions</a-typography-title>
-      <a-table :columns="columns" :data-source="nodeOptionData" rowKey="argument" :pagination="false" />
+      <a-table
+        :columns="columns"
+        :data-source="nodeOptionData"
+        rowKey="argument"
+        :pagination="false"
+        :row-class-name="rowClsName"
+      />
     </section>
   </div>
 </template>
@@ -117,14 +123,17 @@
   export default defineComponent({
     name: 'DocContainer',
     components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo, CustomIconDemo, SearchNodeDemo },
-    setup(prop, {emit}) {
+    setup() {
+      const rowClsName = (_: any, index: number) => ([5, 6, 7, 8].includes(index) ? 'table-row-abandoned' : null);
+
       return {
         propData,
         eventData,
         methodData,
         nodeOptionData,
         columns,
-        methodColumns
+        methodColumns,
+        rowClsName
       }
     }
   });
@@ -149,4 +158,5 @@
       }
     }
   }
+
 </style>
