@@ -87,28 +87,28 @@ const propData = [
     description: '默认展开的nodeKey数组',
     type: 'Array<string | number>',
     defaultValue: '[]',
-    version: '2.0.0'
+    version: '4.0.0'
   },
   {
     argument: 'defaultDisabledKeys',
     description: '默认禁用的nodeKey数组',
     type: 'Array<string | number>',
     defaultValue: '[]',
-    version: '2.0.0'
+    version: '4.0.0'
   },
   {
     argument: 'defaultCheckedKeys',
     description: '默认勾选的nodeKey数组',
     type: 'Array<string | number>',
     defaultValue: '[]',
-    version: '2.0.0'
+    version: '4.0.0'
   },
   {
     argument: 'defaultSelectedKey',
     description: '默认选中的nodeKey',
     type: 'string | number',
     defaultValue: '',
-    version: '2.0.0'
+    version: '4.0.0'
   },
 ];
 const eventData = [
@@ -148,7 +148,7 @@ const methodData = [
     name: 'getExpandedKeys',
     description: '获取已展开的nodeKeys',
     type: '() => Array<string | number>',
-    version: '2.0.0'
+    version: '4.0.0'
   }
 ];
 const nodeOptionData = [
@@ -183,28 +183,28 @@ const nodeOptionData = [
     description: '是否禁用',
     type: 'boolean',
     defaultValue: 'false',
-    version: '2.0.0已废弃'
+    version: '4.0.0已废弃'
   },
   {
     argument: 'expanded',
     description: '是否展开',
     type: 'boolean',
     defaultValue: 'false',
-    version: '2.0.0已废弃'
+    version: '4.0.0已废弃'
   },
   {
     argument: 'selected',
     description: '是否选中',
     type: 'boolean',
     defaultValue: 'false',
-    version: '2.0.0已废弃'
+    version: '4.0.0已废弃'
   },
   {
     argument: 'checked',
     description: '是否勾选',
     type: 'boolean',
     defaultValue: 'false',
-    version: '2.0.0已废弃'
+    version: '4.0.0已废弃'
   },
   {
     argument: 'children',
