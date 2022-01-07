@@ -1,11 +1,10 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import { cloneDeep } from 'lodash-es';
 import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
-import {flattenTree, updateDownwards, updateUpwards} from "./uses";
+import {checkedNodes, flattenTree, selectedNodes, updateDownwards, updateUpwards} from "./uses";
 import VirTreeNode from './node';
 import VirtualList from '../VirtualList';
 import './index.scss';
-import {SelectionModel} from "../selections";
 
 export default defineComponent({
   name: 'VirTree',
@@ -36,8 +35,6 @@ export default defineComponent({
   emits: ['selectChange', 'checkChange', 'toggleExpand'],
   setup: function (props, {emit, slots, expose}) {
 
-
-    const selectedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>());
     const loading = shallowRef(false);
     const flatList = ref<Required<TreeNodeOptions>[]>([]);
     watch(() => props.source, newVal => {
@@ -61,7 +58,7 @@ export default defineComponent({
 
 
     const checkChange = ([checked, node]: [boolean, Required<TreeNodeOptions>]) => {
-      node.checked = checked;
+      checkedNodes.value.toggle(node);
       if (!props.checkStrictly) {
         updateDownwards(checked, node);
         updateUpwards(node, flatList.value);
@@ -76,7 +73,6 @@ export default defineComponent({
         item.level = item.level || node.level! + 1;
         item.disabled = item.disabled || false;
         item.expanded = item.expanded || false;
-        item.checked = item.checked ?? node.checked;
         item.children = item.children || [];
         item.hasChildren = item.hasChildren || false;
         item.parentKey = node.nodeKey || null;
@@ -142,7 +138,7 @@ export default defineComponent({
         return selectedNodes.value.selected[0];
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
-        return flatList.value.filter(item => item.checked);
+        return checkedNodes.value.selected;
       },
       getHalfCheckedNodes: (): TreeNodeOptions[] => {
         return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);
@@ -165,6 +161,7 @@ export default defineComponent({
                 ref: setRef.bind(null, data.index),
                 node: data.item,
                 selectedNodes: selectedNodes.value,
+                checkedNodes: checkedNodes.value,
                 showCheckbox: props.showCheckbox,
                 checkStrictly: props.checkStrictly,
                 iconSlot: slots.icon,

@@ -11,7 +11,6 @@ interface TreeNodeOptions {
   loading?: boolean;
   disabled?: boolean;
   expanded?: boolean;
-  checked?: boolean;
   hasChildren?: boolean;
   children?: TreeNodeOptions[];
   parentKey?: NodeKey | null;

@@ -1,4 +1,9 @@
 import {TreeNodeOptions} from "./types";
+import {ref} from "vue";
+import {SelectionModel} from "../selections";
+
+const selectedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>());
+const checkedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>(true));
 
 function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
   const result: Required<TreeNodeOptions>[] = [];
@@ -10,7 +15,6 @@ function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
         loading: false,
         disabled: item.disabled || false,
         expanded: item.expanded || false,
-        checked: item.checked || parent?.checked || false,
         hasChildren: item.hasChildren || false,
         parentKey: parent?.nodeKey || null,
         children: item.children || []
@@ -32,7 +36,8 @@ function updateDownwards(checked: boolean, node: Required<TreeNodeOptions>) {
   const update = (children: Required<TreeNodeOptions>[]) => {
     if (children.length) {
       children.forEach(child => {
-        child.checked = checked;
+        const checkFunc = checked ? 'select' : 'deselect';
+        checkedNodes.value[checkFunc](child);
         if (child.children?.length) {
           update(child.children as Required<TreeNodeOptions>[]);
         }
@@ -47,9 +52,9 @@ function updateUpwards(targetNode: Required<TreeNodeOptions>, flatList: Required
     if (node.parentKey != null) { // 说明是子节点
       const parentNode = flatList.find(item => item.nodeKey == node.parentKey)!;
       // console.log('parentNode', parentNode);
-      const parentChecked = !parentNode.children!.some(child => !child.checked);
-      if (parentChecked !== parentNode.checked) { // 父节点变了的话，就还要继续向上更新
-        parentNode.checked = parentChecked;
+      const parentChecked = (parentNode.children as Required<TreeNodeOptions>[]).every((child) => checkedNodes.value.isSelected(child));
+      if (parentChecked !== checkedNodes.value.isSelected(parentNode)) { // 父节点变了的话，就还要继续向上更新
+        checkedNodes.value.toggle(parentNode)
         update(parentNode);
       }
     }
@@ -57,4 +62,4 @@ function updateUpwards(targetNode: Required<TreeNodeOptions>, flatList: Required
   update(targetNode);
 }
 
-export { flattenTree, updateUpwards, updateDownwards };
+export { selectedNodes, checkedNodes, flattenTree, updateUpwards, updateDownwards };
