@@ -46,7 +46,9 @@
       const list = ref<TreeNodeOptions[]>([]);
       const virTreeOne = ref<TreeInstance | null>(null);
       const virTreeTwo = ref<TreeInstance | null>(null);
-      const defaultCheckedKeys = ['0-0-0', '0-2'];
+      const defaultCheckedKeys = ref(['0-0-0', '0-2']);
+
+
       onMounted(() => {
         list.value = recursion();
       });

@@ -43,9 +43,14 @@
     setup() {
       const list = ref<TreeNodeOptions[]>([]);
       const virTree = ref<TreeInstance | null>(null);
-      const defaultExpandedKeys = ['0-0', '0-1', '0-1-0'];
-      const defaultSelectedKey = '0-0-1-0';
-      const defaultDisabledKeys = ['0-0-1'];
+      const defaultExpandedKeys = ref(['0-0', '0-1', '0-1-0']);
+      const defaultSelectedKey = ref('0-0-1-0');
+      const defaultDisabledKeys = ref(['0-0-1']);
+
+      setTimeout(() => {
+        defaultDisabledKeys.value = ['0-1', '0-0-2'];
+      }, 5000);
+
       onMounted(() => {
         list.value = recursion();
       });

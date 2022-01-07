@@ -1,4 +1,4 @@
-import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
+import {defineComponent, watch, ref, shallowRef, PropType, h, watchEffect} from 'vue';
 import { cloneDeep } from 'lodash-es';
 import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
 
@@ -60,6 +60,34 @@ export default defineComponent({
       flatList.value = service.flattenTree(newVal, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
       // console.log('expandedKeys>>', expandedKeys.value.selected);
     }, {immediate: true});
+
+    watch(() => props.defaultExpandedKeys, newVal => {
+      service.expandedKeys.value.clear();
+      flatList.value = service.flattenTree(props.source, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
+    });
+
+    watch(() => props.defaultDisabledKeys, newVal => {
+      service.disabledKeys.value.clear();
+      service.disabledKeys.value.select(...newVal);
+    });
+
+    watch(() => props.defaultSelectedKey, newVal => {
+      const target = flatList.value.find(item => item.nodeKey === newVal);
+      if (target) {
+        service.selectedNodes.value.clear();
+        service.selectedNodes.value.select(target);
+      }
+    });
+
+    watch(() => props.defaultCheckedKeys, newVal => {
+      const targets = flatList.value.filter(item => newVal.includes(item.nodeKey));
+      if (targets.length) {
+        service.checkedNodes.value.clear();
+        service.checkedNodes.value.select(...targets);
+      }
+    });
+
+
     const selectChange = (node: Required<TreeNodeOptions>) => {
       const preSelectedNode = service.selectedNodes.value.selected[0];
       let currentNode: TypeWithNull<TreeNodeOptions> = node;
