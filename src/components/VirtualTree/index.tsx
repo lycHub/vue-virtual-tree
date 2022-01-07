@@ -1,7 +1,15 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import { cloneDeep } from 'lodash-es';
 import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
-import {checkedNodes, flattenTree, selectedNodes, updateDownwards, updateUpwards} from "./uses";
+import {
+  checkedNodes,
+  disabledKeys,
+  expandedKeys,
+  flattenTree,
+  selectedNodes,
+  updateDownwards,
+  updateUpwards
+} from "./uses";
 import VirTreeNode from './node';
 import VirtualList from '../VirtualList';
 import './index.scss';
@@ -71,8 +79,6 @@ export default defineComponent({
       node.children = trueChildren.map(item => {
         item.loading = false;
         item.level = item.level || node.level! + 1;
-        item.disabled = item.disabled || false;
-        item.expanded = item.expanded || false;
         item.children = item.children || [];
         item.hasChildren = item.hasChildren || false;
         item.parentKey = node.nodeKey || null;
@@ -86,10 +92,10 @@ export default defineComponent({
       const delKeys: NodeKey[] = [];
       const recursion = (node: Required<TreeNodeOptions>) => {
         if (node.children?.length) {
-          node.children.forEach(item => {
+          (node.children as Required<TreeNodeOptions>[]).forEach(item => {
             delKeys.push(item.nodeKey);
-            if (item.expanded) {
-              item.expanded = false;
+            if (expandedKeys.value.isSelected(item.nodeKey)) {
+              expandedKeys.value.deselect(item.nodeKey);
               recursion(item as Required<TreeNodeOptions>);
             }
           });
@@ -103,9 +109,8 @@ export default defineComponent({
 
     const toggleExpand = (node: Required<TreeNodeOptions>) => {
       if (loading.value) return;
-      // console.log('expand node');
-      node.expanded = !node.expanded;
-      if (node.expanded) {
+      expandedKeys.value.toggle(node.nodeKey);
+      if (expandedKeys.value.isSelected(node.nodeKey)) {
         if (node.children?.length) {
           expandNode(node);
         } else {
@@ -125,7 +130,7 @@ export default defineComponent({
       } else {
         collapseNode(node);
       }
-      emit('toggleExpand', {status: node.expanded, node});
+      emit('toggleExpand', { status: expandedKeys.value.isSelected(node.nodeKey), node });
     }
     const nodeRefs = ref<TreeNodeInstance[]>([]);
     const setRef = (index: number, node: any) => {
@@ -142,6 +147,9 @@ export default defineComponent({
       },
       getHalfCheckedNodes: (): TreeNodeOptions[] => {
         return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);
+      },
+      getExpandedKeys: (): NodeKey[] => {
+        return expandedKeys.value.selected;
       }
     });
 
@@ -162,6 +170,8 @@ export default defineComponent({
                 node: data.item,
                 selectedNodes: selectedNodes.value,
                 checkedNodes: checkedNodes.value,
+                expandedKeys: expandedKeys.value,
+                disabledKeys: disabledKeys.value,
                 showCheckbox: props.showCheckbox,
                 checkStrictly: props.checkStrictly,
                 iconSlot: slots.icon,

@@ -1,9 +1,8 @@
-import {computed, defineComponent, PropType, Slot, watch} from "vue";
+import {computed, defineComponent, PropType, Slot} from "vue";
 import {NodeKey, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
 import {SelectionModel} from "../selections";
-import {checkedNodes} from "./uses";
 
 export default defineComponent({
   name: 'VirTreeNode',
@@ -14,6 +13,14 @@ export default defineComponent({
     },
     checkedNodes: {
       type: Object as PropType<SelectionModel<Required<TreeNodeOptions>>>,
+      required: true
+    },
+    expandedKeys: {
+      type: Object as PropType<SelectionModel<NodeKey>>,
+      required: true
+    },
+    disabledKeys: {
+      type: Object as PropType<SelectionModel<NodeKey>>,
       required: true
     },
     node: {
@@ -52,14 +59,14 @@ export default defineComponent({
       if (props.selectedNodes.isSelected(props.node)) {
         result += ' selected';
       }
-      if (props.node.disabled) {
+      if (props.disabledKeys.isSelected(props.node.nodeKey)) {
         result += ' disabled';
       }
       return result;
     });
     const handleSelect = (event: MouseEvent) => {
       event.stopPropagation();
-      if (!props.node.disabled) {
+      if (!props.disabledKeys.isSelected(props.node.nodeKey)) {
         emit('selectChange', props.node);
       }
     }
@@ -70,7 +77,7 @@ export default defineComponent({
       emit('checkChange', [checked, props.node])
     }
     const renderArrow = (): JSX.Element | null => {
-      return <div class={ ['node-arrow', props.node.expanded ? 'expanded' : ''] }>
+      return <div class={ ['node-arrow', props.expandedKeys.isSelected(props.node.nodeKey) ? 'expanded' : ''] }>
         {
           props.node.hasChildren
             ? props.iconSlot ? props.iconSlot(props.node.loading) : props.node.loading
@@ -86,7 +93,7 @@ export default defineComponent({
       if (props.showCheckbox) {
         return <VirtualCheckbox
           class="node-content node-check-box"
-          disabled={ props.node.disabled }
+          disabled={ props.disabledKeys.isSelected(props.node.nodeKey) }
           modelValue={ props.checkedNodes.isSelected(props.node) }
           halfChecked={ halfChecked.value }
           // @ts-ignore

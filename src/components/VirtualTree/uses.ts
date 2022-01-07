@@ -1,9 +1,11 @@
-import {TreeNodeOptions} from "./types";
+import {NodeKey, TreeNodeOptions} from "./types";
 import {ref} from "vue";
 import {SelectionModel} from "../selections";
 
 const selectedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>());
 const checkedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>(true));
+const expandedKeys = ref(new SelectionModel<NodeKey>(true));
+const disabledKeys = ref(new SelectionModel<NodeKey>(true));
 
 function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
   const result: Required<TreeNodeOptions>[] = [];
@@ -13,14 +15,12 @@ function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
         ...item,
         level,
         loading: false,
-        disabled: item.disabled || false,
-        expanded: item.expanded || false,
         hasChildren: item.hasChildren || false,
         parentKey: parent?.nodeKey || null,
         children: item.children || []
       };
       result.push(flatNode);
-      if (item.expanded && item.children?.length) {
+      if (expandedKeys.value.isSelected(item.nodeKey) && item.children?.length) {
         flatNode.children = recursion(item.children, level + 1, flatNode);
       }
       return flatNode;
@@ -62,4 +62,4 @@ function updateUpwards(targetNode: Required<TreeNodeOptions>, flatList: Required
   update(targetNode);
 }
 
-export { selectedNodes, checkedNodes, flattenTree, updateUpwards, updateDownwards };
+export { selectedNodes, checkedNodes, expandedKeys, disabledKeys, flattenTree, updateUpwards, updateDownwards };

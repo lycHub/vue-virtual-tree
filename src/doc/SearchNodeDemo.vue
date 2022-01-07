@@ -34,7 +34,7 @@
         name: nodeKey,
         children: [],
         hasChildren: true,
-        expanded: expandKeys.includes(nodeKey),
+        // expanded: expandKeys.includes(nodeKey),
         parentPath: getParentPath(parent)
       };
 
@@ -51,7 +51,7 @@
 
   export default defineComponent({
     name: 'SearchNodeDemo',
-    setup(prop, {emit}) {
+    setup() {
       const keywords = ref('');
       const list = ref<TreeNodeOptionsWithParentPath[]>([]);
 
@@ -71,7 +71,7 @@
               result.push(item);
             }
             if (parent) {
-              parent.expanded = matched;
+              // parent.expanded = matched;
             }
             if (item.children?.length) {
               recursion(item.children as TreeNodeOptionsWithParentPath[], item);

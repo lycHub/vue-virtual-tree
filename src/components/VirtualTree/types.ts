@@ -9,8 +9,6 @@ interface TreeNodeOptions {
   name: string;
   level?: number;
   loading?: boolean;
-  disabled?: boolean;
-  expanded?: boolean;
   hasChildren?: boolean;
   children?: TreeNodeOptions[];
   parentKey?: NodeKey | null;
@@ -21,6 +19,7 @@ interface TreeInstance {
   getSelectedNode: () => TreeNodeOptions | undefined;
   getCheckedNodes: () => TreeNodeOptions[];
   getHalfCheckedNodes: () => TreeNodeOptions[];
+  getExpandedKeys: () => NodeKey[];
 }
 
 interface TreeNodeInstance {

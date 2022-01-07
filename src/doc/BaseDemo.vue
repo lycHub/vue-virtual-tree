@@ -17,10 +17,8 @@
       const treeNode: TreeNodeOptions  = {
         nodeKey,
         name: nodeKey,
-        expanded: true,
         children: [],
-        hasChildren: true,
-        disabled: i % 2 === 0
+        hasChildren: true
       };
 
       if (level > 0) {
