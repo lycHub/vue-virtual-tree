@@ -1,21 +1,20 @@
-type nodeKey = string | number;
+type NodeKey = string | number;
 
 /*
 * 用户传入的source必须要有 key, name, hasChildren
 * */
 
 interface TreeNodeOptions {
-  nodeKey: nodeKey;
+  nodeKey: NodeKey;
   name: string;
   level?: number;
   loading?: boolean;
   disabled?: boolean;
   expanded?: boolean;
-  selected?: boolean;
   checked?: boolean;
   hasChildren?: boolean;
   children?: TreeNodeOptions[];
-  parentKey?: nodeKey | null;
+  parentKey?: NodeKey | null;
   // [key: string]: any;
 }
 
@@ -30,4 +29,7 @@ interface TreeNodeInstance {
   halfChecked: () => boolean;
 }
 
-export { TreeNodeOptions, nodeKey, TreeInstance, TreeNodeInstance };
+type TypeWithNull<T> = T | null;
+type TypeWithUndefined<T> = T | undefined;
+
+export { TreeNodeOptions, NodeKey, TreeInstance, TreeNodeInstance, TypeWithUndefined, TypeWithNull };

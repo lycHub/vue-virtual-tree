@@ -20,6 +20,7 @@
         expanded: true,
         children: [],
         hasChildren: true,
+        // selected: nodeKey === '0-0-0-0-1',
         disabled: i % 2 === 0
       };
 

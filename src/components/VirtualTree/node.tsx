@@ -1,11 +1,16 @@
-import {computed, defineComponent, PropType, Slot} from "vue";
-import {TreeNodeOptions} from "./types";
+import {computed, defineComponent, PropType, Slot, watch} from "vue";
+import {NodeKey, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
+import {SelectionModel} from "../selections";
 
 export default defineComponent({
   name: 'VirTreeNode',
   props: {
+    selectedNodes: {
+      type: Object as PropType<SelectionModel<Required<TreeNodeOptions>>>,
+      required: true
+    },
     node: {
       type: Object as PropType<Required<TreeNodeOptions>>,
       required: true
@@ -23,6 +28,11 @@ export default defineComponent({
   },
   emits: ['selectChange', 'toggleExpand', 'checkChange'],
   setup(props, { emit, expose }) {
+    /*watch(() => props.selectedNodes, newVal => {
+      console.log('wat selection', newVal?.selected);
+    }, {
+      deep: true
+    });*/
     const halfChecked = computed(() => {
       let result = false;
       if (!props.checkStrictly && props.node.hasChildren) {
@@ -34,7 +44,7 @@ export default defineComponent({
     });
     const textCls = computed(() => {
       let result = 'node-title';
-      if (props.node.selected) {
+      if (props.selectedNodes.isSelected(props.node)) {
         result += ' selected';
       }
       if (props.node.disabled) {

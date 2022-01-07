@@ -1,4 +1,3 @@
-import { getCurrentInstance } from "vue";
 import {TreeNodeOptions} from "./types";
 
 function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
@@ -11,7 +10,6 @@ function flattenTree(source: TreeNodeOptions[]): Required<TreeNodeOptions>[] {
         loading: false,
         disabled: item.disabled || false,
         expanded: item.expanded || false,
-        selected: item.selected || false,
         checked: item.checked || parent?.checked || false,
         hasChildren: item.hasChildren || false,
         parentKey: parent?.nodeKey || null,

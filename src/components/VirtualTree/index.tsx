@@ -1,10 +1,11 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import { cloneDeep } from 'lodash-es';
-import {nodeKey, TreeNodeInstance, TreeNodeOptions} from "./types";
-import { flattenTree, updateDownwards, updateUpwards } from "./uses";
+import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
+import {flattenTree, updateDownwards, updateUpwards} from "./uses";
 import VirTreeNode from './node';
 import VirtualList from '../VirtualList';
 import './index.scss';
+import {SelectionModel} from "../selections";
 
 export default defineComponent({
   name: 'VirTree',
@@ -33,32 +34,29 @@ export default defineComponent({
     render: Function
   },
   emits: ['selectChange', 'checkChange', 'toggleExpand'],
-  setup(props, { emit, slots, expose }) {
+  setup: function (props, {emit, slots, expose}) {
+
+
+    const selectedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>());
     const loading = shallowRef(false);
-    const selectedKey = ref<string | number>('');
     const flatList = ref<Required<TreeNodeOptions>[]>([]);
     watch(() => props.source, newVal => {
       flatList.value = flattenTree(newVal);
-    }, { immediate: true });
+      // console.log(selectedNodes.value);
+    }, {immediate: true});
     const selectChange = (node: Required<TreeNodeOptions>) => {
-      if (selectedKey.value !== node.nodeKey) {
-        const preSelectedIndex = flatList.value.findIndex(item => item.nodeKey === selectedKey.value);
-        if (preSelectedIndex > -1) {
-          flatList.value[preSelectedIndex].selected = false;
-        }
-        node.selected = true;
-        selectedKey.value = node.nodeKey;
-        emit('selectChange', {
-          preSelectedNode: flatList.value[preSelectedIndex],
-          node
-        });
+      const preSelectedNode = selectedNodes.value.selected[0];
+      let currentNode: TypeWithNull<TreeNodeOptions> = node;
+      if (selectedNodes.value.isSelected(node)) {
+        selectedNodes.value.clear();
+        currentNode = null;
       } else {
-        node.selected = false;
-        emit('selectChange', {
-          preSelectedNode: node,
-          node: null
-        });
+        selectedNodes.value.select(node);
       }
+      emit('selectChange', {
+        preSelectedNode,
+        node: currentNode
+      });
     }
 
 
@@ -68,7 +66,7 @@ export default defineComponent({
         updateDownwards(checked, node);
         updateUpwards(node, flatList.value);
       }
-      emit('checkChange', { checked, node });
+      emit('checkChange', {checked, node});
     }
 
     const expandNode = (node: Required<TreeNodeOptions>, children: TreeNodeOptions[] = []) => {
@@ -77,7 +75,6 @@ export default defineComponent({
         item.loading = false;
         item.level = item.level || node.level! + 1;
         item.disabled = item.disabled || false;
-        item.selected = item.selected || false;
         item.expanded = item.expanded || false;
         item.checked = item.checked ?? node.checked;
         item.children = item.children || [];
@@ -90,7 +87,7 @@ export default defineComponent({
     }
 
     const collapseNode = (targetNode: Required<TreeNodeOptions>) => {
-      const delKeys: nodeKey[] = [];
+      const delKeys: NodeKey[] = [];
       const recursion = (node: Required<TreeNodeOptions>) => {
         if (node.children?.length) {
           node.children.forEach(item => {
@@ -132,7 +129,7 @@ export default defineComponent({
       } else {
         collapseNode(node);
       }
-      emit('toggleExpand', { status: node.expanded, node });
+      emit('toggleExpand', {status: node.expanded, node});
     }
     const nodeRefs = ref<TreeNodeInstance[]>([]);
     const setRef = (index: number, node: any) => {
@@ -141,8 +138,8 @@ export default defineComponent({
       }
     }
     expose({
-      getSelectedNode: (): TreeNodeOptions | undefined => {
-        return flatList.value.find(item => item.selected);
+      getSelectedNode: (): TypeWithUndefined<TreeNodeOptions> => {
+        return selectedNodes.value.selected[0];
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
         return flatList.value.filter(item => item.checked);
@@ -163,9 +160,11 @@ export default defineComponent({
               list: flatList.value,
               dataKey: 'nodeKey',
             }, {
+              // @ts-ignore
               default: (data: { item: Required<TreeNodeOptions>, index: number }) => h(VirTreeNode, {
                 ref: setRef.bind(null, data.index),
                 node: data.item,
+                selectedNodes: selectedNodes.value,
                 showCheckbox: props.showCheckbox,
                 checkStrictly: props.checkStrictly,
                 iconSlot: slots.icon,
