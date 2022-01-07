@@ -2,21 +2,20 @@
   <div class="demo">
     <a-input placeholder="回车搜索" @pressEnter="search" />
     <section>
-      <vir-tree show-checkbox :source="list" :render="renderNode" />
+      <vir-tree show-checkbox :source="list" :render="renderNode" :default-expanded-keys="expandKeys" />
     </section>
   </div>
 </template>
 
 <script lang="tsx">
   import {defineComponent, onMounted, ref} from 'vue';
-  import {TreeNodeOptions} from "../components";
+  import {TreeNodeOptions, NodeKey} from "../components";
 
   interface TreeNodeOptionsWithParentPath extends TreeNodeOptions {
     parentPath: Array<string | number>;
   }
 
   const UNIQUE_WRAPPERS = ['##==-open_tag-==##', '##==-close_tag-==##'];
-  let expandKeys: Array<string | number> = [];
   function getParentPath (parent: TreeNodeOptionsWithParentPath | null): Array<string | number> {
     let result: Array<string | number> = [];
     if (parent) {
@@ -34,7 +33,6 @@
         name: nodeKey,
         children: [],
         hasChildren: true,
-        // expanded: expandKeys.includes(nodeKey),
         parentPath: getParentPath(parent)
       };
 
@@ -54,7 +52,7 @@
     setup() {
       const keywords = ref('');
       const list = ref<TreeNodeOptionsWithParentPath[]>([]);
-
+      const expandKeys = ref<NodeKey[]>([]);
       onMounted(() => {
         list.value = recursion();
         // console.log('list', list.value);
@@ -88,8 +86,7 @@
         const matchedNodes = findMatchedNodes(keywords.value);
         if (matchedNodes.length) {
           // 取出parentPath > 拍扁 > 去重
-          expandKeys = [...new Set(matchedNodes.map(item => item.parentPath).flat())];
-          list.value = recursion();
+          expandKeys.value = [...new Set(matchedNodes.map(item => item.parentPath).flat())];
         }
       }
 
@@ -109,7 +106,8 @@
       return {
         list,
         search,
-        renderNode
+        renderNode,
+        expandKeys
       }
     }
   });
