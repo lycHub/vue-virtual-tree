@@ -58,20 +58,22 @@ export default defineComponent({
 
     watch(() => props.source, newVal => {
       flatList.value = service.flattenTree(newVal, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
-      // console.log('expandedKeys>>', expandedKeys.value.selected);
     }, {immediate: true});
 
     watch(() => props.defaultExpandedKeys, newVal => {
+      service.resetDefaultExpandedKeys(newVal);
       service.expandedKeys.value.clear();
       flatList.value = service.flattenTree(props.source, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
     });
 
     watch(() => props.defaultDisabledKeys, newVal => {
+      service.resetDefaultDisabledKeys(newVal);
       service.disabledKeys.value.clear();
       service.disabledKeys.value.select(...newVal);
     });
 
     watch(() => props.defaultSelectedKey, newVal => {
+      service.resetDefaultSelectedKey(newVal);
       const target = flatList.value.find(item => item.nodeKey === newVal);
       if (target) {
         service.selectedNodes.value.clear();
@@ -80,7 +82,10 @@ export default defineComponent({
     });
 
     watch(() => props.defaultCheckedKeys, newVal => {
+      
       const targets = flatList.value.filter(item => newVal.includes(item.nodeKey));
+      // console.log('watch defaultCheckedKeys:>> ', targets);
+      service.resetDefaultCheckedKeys(newVal);
       if (targets.length) {
         service.checkedNodes.value.clear();
         service.checkedNodes.value.select(...targets);
@@ -94,7 +99,7 @@ export default defineComponent({
       if (service.selectedNodes.value.isSelected(node)) {
         service.selectedNodes.value.clear();
         currentNode = null;
-        service.defaultSelectedKey = '';
+        service.resetDefaultSelectedKey();
       } else {
         service.selectedNodes.value.select(node);
       }

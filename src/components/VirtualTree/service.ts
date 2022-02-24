@@ -24,6 +24,7 @@ class TreeService {
     defaultExpandedKeys: NodeKey[],
     defaultDisabledKeys: NodeKey[],
   ): Required<TreeNodeOptions>[] {
+  
     this.defaultSelectedKey = defaultSelectedKey;
     this.defaultCheckedKeys = defaultCheckedKeys;
     this.defaultExpandedKeys = defaultExpandedKeys;
@@ -46,6 +47,8 @@ class TreeService {
         if (defaultSelectedKey === item.nodeKey) {
           this.selectedNodes.value.select(flatNode);
         }
+
+        // console.log('defaultCheckedKeys :>> ', item.nodeKey, defaultDisabledKeys.includes(item.nodeKey));
         if (defaultCheckedKeys.includes(item.nodeKey)) {
           this.checkedNodes.value.select(flatNode);
         }
@@ -97,11 +100,27 @@ class TreeService {
     update(targetNode);
   }
 
+  resetDefaultSelectedKey(key: NodeKey = '') {
+    this.defaultSelectedKey = key;
+  }
+
+  resetDefaultDisabledKeys(keys: NodeKey[]) {
+    this.defaultDisabledKeys = keys;
+  }
+
+  resetDefaultCheckedKeys(keys: NodeKey[]) {
+    this.defaultCheckedKeys = keys;
+  }
+
   removeDefaultCheckedKeys(node: TreeNodeOptions) {
     const inDefaultIndex = this.defaultCheckedKeys.findIndex(item => item === node.nodeKey);
     if (inDefaultIndex > -1) {
       this.defaultCheckedKeys.splice(inDefaultIndex, 1);
     }
+  }
+
+  resetDefaultExpandedKeys(keys: NodeKey[]) {
+    this.defaultExpandedKeys = keys;
   }
 
   removeDefaultExpandedKeys(key: NodeKey) {
@@ -110,7 +129,6 @@ class TreeService {
       this.defaultExpandedKeys.splice(inDefaultIndex, 1);
     }
   }
-
 }
 
 
