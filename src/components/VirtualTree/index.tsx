@@ -1,4 +1,4 @@
-import {defineComponent, watch, ref, shallowRef, PropType, h, watchEffect} from 'vue';
+import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
 import { cloneDeep } from 'lodash-es';
 import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
 
@@ -63,6 +63,7 @@ export default defineComponent({
     watch(() => props.defaultExpandedKeys, newVal => {
       service.resetDefaultExpandedKeys(newVal);
       service.expandedKeys.value.clear();
+      service.expandedKeys.value.select(...newVal);
       flatList.value = service.flattenTree(props.source, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
     });
 
@@ -82,7 +83,6 @@ export default defineComponent({
     });
 
     watch(() => props.defaultCheckedKeys, newVal => {
-      
       const targets = flatList.value.filter(item => newVal.includes(item.nodeKey));
       // console.log('watch defaultCheckedKeys:>> ', targets);
       service.resetDefaultCheckedKeys(newVal);
@@ -115,7 +115,6 @@ export default defineComponent({
       if (!checked) {
         service.removeDefaultCheckedKeys(node);
       }
-
       if (!props.checkStrictly) {
         service.updateDownwards(checked, node);
         service.updateUpwards(node, flatList.value);
@@ -125,33 +124,14 @@ export default defineComponent({
 
     const expandNode = (node: Required<TreeNodeOptions>, children: TreeNodeOptions[] = []) => {
       const trueChildren = children.length ? children : cloneDeep(node.children)!;
-      node.children = (trueChildren as Required<TreeNodeOptions>[]).map(item => {
-        item.loading = false;
-        item.level = item.level || node.level! + 1;
-        item.children = item.children || [];
-        item.hasChildren = item.hasChildren || false;
-        item.parentKey = node.nodeKey || null;
-
-        if (props.defaultDisabledKeys.includes(item.nodeKey)) {
-          service.disabledKeys.value.select(item.nodeKey);
-        }
-
-        const selectedKey = service.selectedNodes.value.selected[0]?.nodeKey || service.defaultSelectedKey;
-        if (selectedKey === item.nodeKey) {
-          service.selectedNodes.value.select(item as Required<TreeNodeOptions>);
-        }
-
-        const allCheckedKeys = service.checkedNodes.value.selected.map(item => item.nodeKey).concat(service.defaultCheckedKeys);
-        if (allCheckedKeys.includes(item.nodeKey) || (!props.checkStrictly && service.checkedNodes.value.isSelected(node))) {
-          service.checkedNodes.value.select(item as Required<TreeNodeOptions>);
-        }
-
-        const allExpandedKeys = service.expandedKeys.value.selected.concat(service.defaultExpandedKeys);
-        if (allExpandedKeys.includes(item.nodeKey)) {
-          service.expandedKeys.value.select(item.nodeKey);
-        }
-        return item;
-      });
+      const selectedKey = service.selectedNodes.value.selected[0]?.nodeKey || service.defaultSelectedKey;
+      const allExpandedKeys = service.expandedKeys.value.selected.concat(service.defaultExpandedKeys);
+      const allCheckedKeys = service.checkedNodes.value.selected.map(item => item.nodeKey).concat(service.defaultCheckedKeys);
+      if (service.checkedNodes.value.isSelected(node)) {
+        allCheckedKeys.push(...trueChildren.map(item => item.nodeKey));
+      }
+      // console.log('allCheckedKeys', allCheckedKeys);
+      node.children = service.flattenTree(trueChildren, selectedKey, allCheckedKeys, allExpandedKeys, props.defaultDisabledKeys, node);
       const targetIndex = flatList.value.findIndex(item => item.nodeKey === node.nodeKey);
       flatList.value.splice(targetIndex + 1, 0, ...(node.children as Required<TreeNodeOptions>[]));
     }

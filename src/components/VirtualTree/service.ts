@@ -23,6 +23,7 @@ class TreeService {
     defaultCheckedKeys: NodeKey[],
     defaultExpandedKeys: NodeKey[],
     defaultDisabledKeys: NodeKey[],
+    parent: Required<TreeNodeOptions> | null = null
   ): Required<TreeNodeOptions>[] {
   
     this.defaultSelectedKey = defaultSelectedKey;
@@ -34,33 +35,47 @@ class TreeService {
       return list.map(item => {
         const flatNode: Required<TreeNodeOptions> = {
           ...item,
-          level,
+          level: item.level || level + 1,
           loading: false,
           hasChildren: item.hasChildren || false,
           parentKey: parent?.nodeKey || null,
           children: item.children || []
         };
-        result.push(flatNode);
-        if (defaultDisabledKeys.includes(item.nodeKey)) {
-          this.disabledKeys.value.select(item.nodeKey);
+        let goon = true;
+        if (parent) {
+          if (defaultExpandedKeys.includes(parent.nodeKey)) {
+            this.expandedKeys.value.select(parent.nodeKey);
+            if (defaultCheckedKeys.includes(parent.nodeKey)) {
+              defaultCheckedKeys.push(flatNode.nodeKey);
+            }
+            result.push(flatNode);
+          } else {
+            goon = false;
+          }
+        } else {
+          result.push(flatNode);
         }
-        if (defaultSelectedKey === item.nodeKey) {
-          this.selectedNodes.value.select(flatNode);
+        if (goon) {
+          if (defaultDisabledKeys.includes(item.nodeKey)) {
+            this.disabledKeys.value.select(item.nodeKey);
+          }
+          if (defaultSelectedKey === item.nodeKey) {
+            this.selectedNodes.value.select(flatNode);
+          }
+          if (item.children?.length) {
+            flatNode.children = recursion(item.children, level + 1, flatNode);
+          }
         }
 
-        // console.log('defaultCheckedKeys :>> ', item.nodeKey, defaultDisabledKeys.includes(item.nodeKey));
+        // || (parent && defaultCheckedKeys.includes(parent.nodeKey))
         if (defaultCheckedKeys.includes(item.nodeKey)) {
           this.checkedNodes.value.select(flatNode);
-        }
-        if (defaultExpandedKeys.includes(item.nodeKey) && item.children?.length) {
-          this.expandedKeys.value.select(item.nodeKey);
-          flatNode.children = recursion(item.children, level + 1, flatNode);
         }
         return flatNode;
       });
     }
 
-    recursion(source);
+    recursion(source, parent?.level);
     return result;
   }
 
