@@ -1,4 +1,4 @@
-import {NodeKey, TreeNodeOptions} from "./types";
+import {NodeKey, TreeNodeOptions, TypeWithNull} from "./types";
 import {ref} from "vue";
 import {SelectionModel} from "../selections";
 
@@ -23,20 +23,19 @@ class TreeService {
     defaultCheckedKeys: NodeKey[],
     defaultExpandedKeys: NodeKey[],
     defaultDisabledKeys: NodeKey[],
-    parent: Required<TreeNodeOptions> | null = null
+    parent: TypeWithNull<Required<TreeNodeOptions>> = null
   ): Required<TreeNodeOptions>[] {
   
     this.defaultSelectedKey = defaultSelectedKey;
     this.defaultCheckedKeys = defaultCheckedKeys;
     this.defaultExpandedKeys = defaultExpandedKeys;
     this.defaultDisabledKeys = defaultDisabledKeys;
-    console.log('defaultCheckedKeys 22 :>> ', defaultCheckedKeys);
     const result: Required<TreeNodeOptions>[] = [];
-    const recursion = (list: TreeNodeOptions[], level = 0, parent: Required<TreeNodeOptions> | null = null) => {
+    const recursion = (list: TreeNodeOptions[], parent: TypeWithNull<Required<TreeNodeOptions>> = null) => {
       return list.map(item => {
         const flatNode: Required<TreeNodeOptions> = {
           ...item,
-          level: item.level || level + 1,
+          level: parent ? parent.level + 1 : item.level || 0,
           loading: false,
           hasChildren: item.hasChildren || false,
           parentKey: parent?.nodeKey || null,
@@ -64,7 +63,7 @@ class TreeService {
             this.selectedNodes.value.select(flatNode);
           }
           if (item.children?.length) {
-            flatNode.children = recursion(item.children, level + 1, flatNode);
+            flatNode.children = recursion(item.children, flatNode);
           }
         }
 
@@ -75,7 +74,7 @@ class TreeService {
       });
     }
 
-    recursion(source, parent?.level);
+    recursion(source, parent);
     return result;
   }
 
