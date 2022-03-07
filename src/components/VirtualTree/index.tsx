@@ -1,5 +1,5 @@
 import {defineComponent, watch, ref, shallowRef, PropType, h} from 'vue';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, uniq } from 'lodash-es';
 import {NodeKey, TreeNodeInstance, TreeNodeOptions, TypeWithNull, TypeWithUndefined} from "./types";
 
 import VirTreeNode from './node';
@@ -83,12 +83,10 @@ export default defineComponent({
     });
 
     watch(() => props.defaultCheckedKeys, newVal => {
-      const targets = flatList.value.filter(item => newVal.includes(item.nodeKey));
-      // console.log('watch defaultCheckedKeys:>> ', targets);
       service.resetDefaultCheckedKeys(newVal);
-      if (targets.length) {
+      if (newVal.length) {
         service.checkedNodes.value.clear();
-        service.checkedNodes.value.select(...targets);
+        service.checkedNodes.value.select(...newVal);
       }
     });
 
@@ -111,7 +109,7 @@ export default defineComponent({
 
 
     const checkChange = ([checked, node]: [boolean, Required<TreeNodeOptions>]) => {
-      service.checkedNodes.value.toggle(node);
+      service.checkedNodes.value.toggle(node.nodeKey);
       if (!checked) {
         service.removeDefaultCheckedKeys(node);
       }
@@ -119,6 +117,8 @@ export default defineComponent({
         service.updateDownwards(checked, node);
         service.updateUpwards(node, flatList.value);
       }
+      // console.log('checkChange defaultCheckedKeys:>> ', service.defaultCheckedKeys);
+      // console.log('checkChange selected:>> ', service.checkedNodes.value.selected);
       emit('checkChange', {checked, node});
     }
 
@@ -126,12 +126,11 @@ export default defineComponent({
       const trueChildren = children.length ? children : cloneDeep(node.children)!;
       const selectedKey = service.selectedNodes.value.selected[0]?.nodeKey || service.defaultSelectedKey;
       const allExpandedKeys = service.expandedKeys.value.selected.concat(service.defaultExpandedKeys);
-      const allCheckedKeys = service.checkedNodes.value.selected.map(item => item.nodeKey).concat(service.defaultCheckedKeys);
-      if (service.checkedNodes.value.isSelected(node)) {
+      const allCheckedKeys = service.checkedNodes.value.selected;
+      if (service.checkedNodes.value.isSelected(node.nodeKey)) {
         allCheckedKeys.push(...trueChildren.map(item => item.nodeKey));
       }
-      // console.log('allCheckedKeys', allCheckedKeys);
-      node.children = service.flattenTree(trueChildren, selectedKey, allCheckedKeys, allExpandedKeys, props.defaultDisabledKeys, node);
+      node.children = service.flattenTree(trueChildren, selectedKey, uniq(allCheckedKeys), allExpandedKeys, props.defaultDisabledKeys, node);
       const targetIndex = flatList.value.findIndex(item => item.nodeKey === node.nodeKey);
       flatList.value.splice(targetIndex + 1, 0, ...(node.children as Required<TreeNodeOptions>[]));
     }
@@ -193,7 +192,7 @@ export default defineComponent({
         return service.selectedNodes.value.selected[0];
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
-        return service.checkedNodes.value.selected;
+        return flatList.value.filter(item => service.checkedNodes.value.selected.includes(item.nodeKey));
       },
       getHalfCheckedNodes: (): TreeNodeOptions[] => {
         return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);

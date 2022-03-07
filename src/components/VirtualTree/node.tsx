@@ -12,7 +12,7 @@ export default defineComponent({
       required: true
     },
     checkedNodes: {
-      type: Object as PropType<SelectionModel<Required<TreeNodeOptions>>>,
+      type: Object as PropType<SelectionModel<NodeKey>>,
       required: true
     },
     expandedKeys: {
@@ -50,7 +50,7 @@ export default defineComponent({
       let result = false;
       if (!props.checkStrictly && props.node.hasChildren) {
         const { children } = props.node;
-        const checkedChildren = (children as Required<TreeNodeOptions>[])!.filter(item => props.checkedNodes.isSelected(item));
+        const checkedChildren = (children as Required<TreeNodeOptions>[])!.filter(item => props.checkedNodes.isSelected(item.nodeKey));
         result = checkedChildren.length > 0 && checkedChildren.length < children!.length;
       }
       return result;
@@ -95,7 +95,7 @@ export default defineComponent({
         return <VirtualCheckbox
           class="node-content node-check-box"
           disabled={ props.disabledKeys.isSelected(props.node.nodeKey) }
-          modelValue={ props.checkedNodes.isSelected(props.node) }
+          modelValue={ props.checkedNodes.isSelected(props.node.nodeKey) }
           halfChecked={ halfChecked.value }
           // @ts-ignore
           onChange={ handleCheckChange }>

@@ -4,7 +4,7 @@ import {SelectionModel} from "../selections";
 
 class TreeService {
   selectedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>());
-  checkedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>(true));
+  checkedNodes = ref(new SelectionModel<NodeKey>(true));
   expandedKeys = ref(new SelectionModel<NodeKey>(true));
   disabledKeys = ref(new SelectionModel<NodeKey>(true));
 
@@ -30,6 +30,7 @@ class TreeService {
     this.defaultCheckedKeys = defaultCheckedKeys;
     this.defaultExpandedKeys = defaultExpandedKeys;
     this.defaultDisabledKeys = defaultDisabledKeys;
+    console.log('defaultCheckedKeys 22 :>> ', defaultCheckedKeys);
     const result: Required<TreeNodeOptions>[] = [];
     const recursion = (list: TreeNodeOptions[], level = 0, parent: Required<TreeNodeOptions> | null = null) => {
       return list.map(item => {
@@ -45,7 +46,7 @@ class TreeService {
         if (parent) {
           if (defaultExpandedKeys.includes(parent.nodeKey)) {
             this.expandedKeys.value.select(parent.nodeKey);
-            if (defaultCheckedKeys.includes(parent.nodeKey)) {
+            if (defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
               defaultCheckedKeys.push(flatNode.nodeKey);
             }
             result.push(flatNode);
@@ -67,9 +68,8 @@ class TreeService {
           }
         }
 
-        // || (parent && defaultCheckedKeys.includes(parent.nodeKey))
-        if (defaultCheckedKeys.includes(item.nodeKey)) {
-          this.checkedNodes.value.select(flatNode);
+        if (defaultCheckedKeys.includes(flatNode.nodeKey)) {
+          this.checkedNodes.value.select(flatNode.nodeKey);
         }
         return flatNode;
       });
@@ -84,7 +84,7 @@ class TreeService {
       if (children.length) {
         children.forEach(child => {
           const checkFunc = checked ? 'select' : 'deselect';
-          this.checkedNodes.value[checkFunc](child);
+          this.checkedNodes.value[checkFunc](child.nodeKey);
           if (!checked) {
             this.removeDefaultCheckedKeys(child);
           }
@@ -102,9 +102,9 @@ class TreeService {
       if (node.parentKey != null) { // 说明是子节点
         const parentNode = flatList.find(item => item.nodeKey == node.parentKey)!;
         // console.log('parentNode', parentNode);
-        const parentChecked = (parentNode.children as Required<TreeNodeOptions>[]).every((child) => this.checkedNodes.value.isSelected(child));
-        if (parentChecked !== this.checkedNodes.value.isSelected(parentNode)) { // 父节点变了的话，就还要继续向上更新
-          this.checkedNodes.value.toggle(parentNode);
+        const parentChecked = (parentNode.children as Required<TreeNodeOptions>[]).every((child) => this.checkedNodes.value.isSelected(child.nodeKey));
+        if (parentChecked !== this.checkedNodes.value.isSelected(parentNode.nodeKey)) { // 父节点变了的话，就还要继续向上更新
+          this.checkedNodes.value.toggle(parentNode.nodeKey);
           if (!parentChecked) {
             this.removeDefaultCheckedKeys(parentNode);
           }
