@@ -3,12 +3,14 @@
     <section>
       <h5>默认父子节点联动</h5>
       <a-button @click="halfNodes">获取半选节点</a-button>
-      <vir-tree ref="virTreeOne" show-checkbox :source="list" :default-checked-keys="defaultCheckedKeys" />
-    </section>
-    <section>
-      <h5>父子节点不联动</h5>
       <a-button @click="checkedNodes">获取勾选节点</a-button>
-      <vir-tree ref="virTreeTwo" show-checkbox check-strictly :source="list" :default-checked-keys="defaultCheckedKeys" />
+      <vir-tree
+        ref="virTreeOne"
+        show-checkbox
+        :source="list"
+        :default-expanded-keys="defaultExpandedKeys"
+        :default-checked-keys="defaultCheckedKeys"
+      />
     </section>
   </div>
 </template>
@@ -46,8 +48,8 @@
       const list = ref<TreeNodeOptions[]>([]);
       const virTreeOne = ref<TreeInstance | null>(null);
       const virTreeTwo = ref<TreeInstance | null>(null);
+      const defaultExpandedKeys = ref(['0-3']);
       const defaultCheckedKeys = ref(['0-0-0', '0-2']);
-
 
       onMounted(() => {
         list.value = recursion();
@@ -56,7 +58,7 @@
         getHalfCheckNodes(virTreeOne.value!);
       }
       const checkedNodes = () => {
-        getCheckNodes(virTreeTwo.value!);
+        getCheckNodes(virTreeOne.value!);
       }
       return {
         list,
@@ -64,6 +66,7 @@
         virTreeTwo,
         halfNodes,
         checkedNodes,
+        defaultExpandedKeys,
         defaultCheckedKeys
       }
     }

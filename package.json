@@ -3,7 +3,7 @@
   "version": "4.0.5",
   "description": "Tree component for large amount of data, base on Vue3",
   "scripts": {
-    "serve": "vue-cli-service serve --port 4200",
+    "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && npm run build:types",
     "build:types": "tsc --project src/components/tsconfig.json"

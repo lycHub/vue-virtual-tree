@@ -41,34 +41,39 @@ class TreeService {
           parentKey: parent?.nodeKey || null,
           children: item.children || []
         };
+
         let goon = true;
+
         if (parent) {
           if (defaultExpandedKeys.includes(parent.nodeKey)) {
-            this.expandedKeys.value.select(parent.nodeKey);
-            if (defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
-              defaultCheckedKeys.push(flatNode.nodeKey);
-            }
             result.push(flatNode);
           } else {
             goon = false;
           }
+          if (defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
+            defaultCheckedKeys.push(flatNode.nodeKey);
+            this.checkedNodes.value.select(flatNode.nodeKey);
+          }
         } else {
           result.push(flatNode);
         }
-        if (goon) {
-          if (defaultDisabledKeys.includes(item.nodeKey)) {
-            this.disabledKeys.value.select(item.nodeKey);
-          }
-          if (defaultSelectedKey === item.nodeKey) {
-            this.selectedNodes.value.select(flatNode);
-          }
-          if (item.children?.length) {
-            flatNode.children = recursion(item.children, flatNode);
-          }
+      
+        if (defaultDisabledKeys.includes(flatNode.nodeKey)) {
+          this.disabledKeys.value.select(flatNode.nodeKey);
         }
-
+        if (defaultSelectedKey === flatNode.nodeKey) {
+          this.selectedNodes.value.select(flatNode);
+        }
+        if (defaultExpandedKeys.includes(flatNode.nodeKey)) {
+          this.expandedKeys.value.select(flatNode.nodeKey);
+        }
+        
         if (defaultCheckedKeys.includes(flatNode.nodeKey)) {
           this.checkedNodes.value.select(flatNode.nodeKey);
+        }
+
+        if (flatNode.children?.length) {
+          flatNode.children = recursion(flatNode.children, flatNode);
         }
         return flatNode;
       });
