@@ -25,34 +25,33 @@ class TreeService {
     defaultDisabledKeys: NodeKey[],
     parent: TypeWithNull<Required<TreeNodeOptions>> = null
   ): Required<TreeNodeOptions>[] {
-  
     this.defaultSelectedKey = defaultSelectedKey;
     this.defaultCheckedKeys = defaultCheckedKeys;
     this.defaultExpandedKeys = defaultExpandedKeys;
     this.defaultDisabledKeys = defaultDisabledKeys;
     const result: Required<TreeNodeOptions>[] = [];
+
     const recursion = (list: TreeNodeOptions[], parent: TypeWithNull<Required<TreeNodeOptions>> = null) => {
       return list.map(item => {
+        const childrenSize = item.children?.length || 0;
         const flatNode: Required<TreeNodeOptions> = {
           ...item,
           level: parent ? parent.level + 1 : item.level || 0,
           loading: false,
-          hasChildren: item.hasChildren || false,
+          hasChildren: item.hasChildren || childrenSize > 0,
           parentKey: parent?.nodeKey || null,
           children: item.children || []
         };
-
         let goon = true;
-
         if (parent) {
           if (defaultExpandedKeys.includes(parent.nodeKey)) {
+            if (defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
+              defaultCheckedKeys.push(flatNode.nodeKey);
+              this.checkedNodes.value.select(flatNode.nodeKey);
+            }
             result.push(flatNode);
           } else {
             goon = false;
-          }
-          if (defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
-            defaultCheckedKeys.push(flatNode.nodeKey);
-            this.checkedNodes.value.select(flatNode.nodeKey);
           }
         } else {
           result.push(flatNode);
@@ -72,7 +71,7 @@ class TreeService {
           this.checkedNodes.value.select(flatNode.nodeKey);
         }
 
-        if (flatNode.children?.length) {
+        if (goon && childrenSize) {
           flatNode.children = recursion(flatNode.children, flatNode);
         }
         return flatNode;
@@ -147,6 +146,56 @@ class TreeService {
     if (inDefaultIndex > -1) {
       this.defaultExpandedKeys.splice(inDefaultIndex, 1);
     }
+  }
+
+
+  getCheckedNodes(
+    source: TreeNodeOptions[],
+    checkedKeys: NodeKey[]
+  ): TreeNodeOptions[] {
+    const result: TreeNodeOptions[] = [];
+    const checkedSize = checkedKeys.length;
+    // console.log('checkedSize :>> ', checkedSize);
+    let count = 0;
+    const recursion = (list: TreeNodeOptions[], parent: TypeWithNull<TreeNodeOptions> = null) => {
+      for (const item of list) {
+        let goon = true;
+        if (parent) {
+          if (result.map(rItem => rItem.nodeKey).includes(parent.nodeKey)) {
+            result.push(item);
+          } else {
+            if (checkedKeys.includes(item.nodeKey)) {
+              count++;
+              result.push(item);
+            } else {
+              if (count >= checkedSize) {
+                goon = false;
+              }
+            }
+          }
+        } else {
+          if (checkedKeys.includes(item.nodeKey)) {
+            count++;
+            result.push(item);
+          } else {
+            if (count >= checkedSize) {
+              goon = false;
+            }
+          }
+        }
+        if (goon) {
+          if ( item.children?.length) {
+            recursion(item.children, item);
+          }
+        } else {
+          break;
+        }
+      }
+    }
+    if (checkedSize) {
+      recursion(source);
+    }
+    return result;
   }
 }
 

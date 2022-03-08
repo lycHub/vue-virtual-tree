@@ -28,13 +28,13 @@
         nodeKey,
         name: nodeKey,
         children: [],
-        hasChildren: true
+        // hasChildren: true
       };
 
       if (level > 0) {
         treeNode.children = recursion(nodeKey, level - 1);
       } else {
-        treeNode.hasChildren = false;
+        // treeNode.hasChildren = false;
       }
 
       list.push(treeNode);

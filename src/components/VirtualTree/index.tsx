@@ -58,7 +58,7 @@ export default defineComponent({
 
     watch(() => props.source, newVal => {
       flatList.value = service.flattenTree(newVal, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
-      // console.log('checkedNodes :>> ', service.checkedNodes.value.selected);
+      // console.log('flatList :>> ', flatList.value);
     }, {immediate: true});
 
     watch(() => props.defaultExpandedKeys, newVal => {
@@ -193,8 +193,8 @@ export default defineComponent({
         return service.selectedNodes.value.selected[0];
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
-        // flatlist 未保存折叠的节点
-        return flatList.value.filter(item => service.checkedNodes.value.selected.includes(item.nodeKey));
+        // return flatList.value.filter(item => service.checkedNodes.value.selected.includes(item.nodeKey));
+        return service.getCheckedNodes(props.source, service.checkedNodes.value.selected);
       },
       getHalfCheckedNodes: (): TreeNodeOptions[] => {
         return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);

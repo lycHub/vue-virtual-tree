@@ -1,7 +1,7 @@
 type NodeKey = string | number;
 
 /*
-* 用户传入的source必须要有 key, name, hasChildren
+* 用户传入的source必须要有 key, name
 * */
 
 interface TreeNodeOptions {
