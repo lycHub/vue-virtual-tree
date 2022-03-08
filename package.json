@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-tree",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "Tree component for large amount of data, base on Vue3",
   "scripts": {
     "start": "vue-cli-service serve",

@@ -3,12 +3,23 @@
     <section>
       <h5>默认父子节点联动</h5>
       <a-button @click="halfNodes">获取半选节点</a-button>
-      <a-button @click="checkedNodes">获取勾选节点</a-button>
+      <!-- <a-button @click="checkedNodes">获取勾选节点</a-button> -->
+      <!--  :default-expanded-keys="defaultExpandedKeys" -->
       <vir-tree
         ref="virTreeOne"
         show-checkbox
         :source="list"
-        :default-expanded-keys="defaultExpandedKeys"
+        :default-checked-keys="defaultCheckedKeys"
+      />
+    </section>
+    <section>
+      <h5>父子节点不联动</h5>
+      <a-button @click="checkedNodes">获取勾选节点</a-button>
+      <vir-tree
+        ref="virTreeTwo"
+        show-checkbox
+        check-strictly
+        :source="list"
         :default-checked-keys="defaultCheckedKeys"
       />
     </section>
@@ -28,13 +39,13 @@
         nodeKey,
         name: nodeKey,
         children: [],
-        // hasChildren: true
+        hasChildren: true
       };
 
       if (level > 0) {
         treeNode.children = recursion(nodeKey, level - 1);
       } else {
-        // treeNode.hasChildren = false;
+        treeNode.hasChildren = false;
       }
 
       list.push(treeNode);
@@ -48,8 +59,9 @@
       const list = ref<TreeNodeOptions[]>([]);
       const virTreeOne = ref<TreeInstance | null>(null);
       const virTreeTwo = ref<TreeInstance | null>(null);
-      const defaultExpandedKeys = ref(['0-3']);
+      const defaultExpandedKeys = ref(['0-2']);
       const defaultCheckedKeys = ref(['0-0-0', '0-2']);
+
 
       onMounted(() => {
         list.value = recursion();
@@ -58,7 +70,7 @@
         getHalfCheckNodes(virTreeOne.value!);
       }
       const checkedNodes = () => {
-        getCheckNodes(virTreeOne.value!);
+        getCheckNodes(virTreeTwo.value!);
       }
       return {
         list,

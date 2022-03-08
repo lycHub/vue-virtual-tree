@@ -57,7 +57,7 @@ export default defineComponent({
     const service = new TreeService();
 
     watch(() => props.source, newVal => {
-      flatList.value = service.flattenTree(newVal, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys);
+      flatList.value = service.flattenTree(newVal, props.defaultSelectedKey, props.defaultCheckedKeys, props.defaultExpandedKeys, props.defaultDisabledKeys, props.checkStrictly);
       // console.log('flatList :>> ', flatList.value);
     }, {immediate: true});
 
@@ -127,11 +127,12 @@ export default defineComponent({
       const trueChildren = children.length ? children : cloneDeep(node.children)!;
       const selectedKey = service.selectedNodes.value.selected[0]?.nodeKey || service.defaultSelectedKey;
       const allExpandedKeys = service.expandedKeys.value.selected.concat(service.defaultExpandedKeys);
-      const allCheckedKeys = service.checkedNodes.value.selected;
-      if (service.checkedNodes.value.isSelected(node.nodeKey)) {
+      const allCheckedKeys = service.checkedNodes.value.selected.concat(service.defaultCheckedKeys);
+      // !props.checkStrictly && 
+      if (!props.checkStrictly && service.checkedNodes.value.isSelected(node.nodeKey)) {
         allCheckedKeys.push(...trueChildren.map(item => item.nodeKey));
       }
-      node.children = service.flattenTree(trueChildren, selectedKey, uniq(allCheckedKeys), allExpandedKeys, props.defaultDisabledKeys, node);
+      node.children = service.flattenTree(trueChildren, selectedKey, uniq(allCheckedKeys), allExpandedKeys, props.defaultDisabledKeys, props.checkStrictly, node);
       const targetIndex = flatList.value.findIndex(item => item.nodeKey === node.nodeKey);
       flatList.value.splice(targetIndex + 1, 0, ...(node.children as Required<TreeNodeOptions>[]));
     }
@@ -193,8 +194,9 @@ export default defineComponent({
         return service.selectedNodes.value.selected[0];
       },
       getCheckedNodes: (): TreeNodeOptions[] => {
-        // return flatList.value.filter(item => service.checkedNodes.value.selected.includes(item.nodeKey));
-        return service.getCheckedNodes(props.source, service.checkedNodes.value.selected);
+        return props.loadData
+          ? flatList.value.filter(item => service.checkedNodes.value.selected.includes(item.nodeKey))
+          : service.getCheckedNodes(props.source, service.checkedNodes.value.selected, props.checkStrictly);
       },
       getHalfCheckedNodes: (): TreeNodeOptions[] => {
         return nodeRefs.value.filter(item => item.halfChecked()).map(item => item.rawNode);

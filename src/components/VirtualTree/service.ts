@@ -13,6 +13,7 @@ class TreeService {
   defaultExpandedKeys: NodeKey[] = [];
   defaultDisabledKeys: NodeKey[] = [];
 
+  // flatSourceTree: TreeNodeOptions[] = [];
   flatTree: Required<TreeNodeOptions>[] = [];
 
   constructor() {}
@@ -23,6 +24,7 @@ class TreeService {
     defaultCheckedKeys: NodeKey[],
     defaultExpandedKeys: NodeKey[],
     defaultDisabledKeys: NodeKey[],
+    checkStrictly = false,
     parent: TypeWithNull<Required<TreeNodeOptions>> = null
   ): Required<TreeNodeOptions>[] {
     this.defaultSelectedKey = defaultSelectedKey;
@@ -30,7 +32,6 @@ class TreeService {
     this.defaultExpandedKeys = defaultExpandedKeys;
     this.defaultDisabledKeys = defaultDisabledKeys;
     const result: Required<TreeNodeOptions>[] = [];
-
     const recursion = (list: TreeNodeOptions[], parent: TypeWithNull<Required<TreeNodeOptions>> = null) => {
       return list.map(item => {
         const childrenSize = item.children?.length || 0;
@@ -45,7 +46,7 @@ class TreeService {
         let goon = true;
         if (parent) {
           if (defaultExpandedKeys.includes(parent.nodeKey)) {
-            if (defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
+            if (!checkStrictly && defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
               defaultCheckedKeys.push(flatNode.nodeKey);
               this.checkedNodes.value.select(flatNode.nodeKey);
             }
@@ -70,7 +71,7 @@ class TreeService {
         if (defaultCheckedKeys.includes(flatNode.nodeKey)) {
           this.checkedNodes.value.select(flatNode.nodeKey);
         }
-
+        
         if (goon && childrenSize) {
           flatNode.children = recursion(flatNode.children, flatNode);
         }
@@ -151,24 +152,26 @@ class TreeService {
 
   getCheckedNodes(
     source: TreeNodeOptions[],
-    checkedKeys: NodeKey[]
+    checkedKeys: NodeKey[],
+    checkStrictly = false
   ): TreeNodeOptions[] {
     const result: TreeNodeOptions[] = [];
     const checkedSize = checkedKeys.length;
     // console.log('checkedSize :>> ', checkedSize);
     let count = 0;
+    // console.log('flatSourceTree :>> ', this.flatSourceTree);
     const recursion = (list: TreeNodeOptions[], parent: TypeWithNull<TreeNodeOptions> = null) => {
       for (const item of list) {
         let goon = true;
         if (parent) {
-          if (result.map(rItem => rItem.nodeKey).includes(parent.nodeKey)) {
+          if (checkedKeys.includes(item.nodeKey)) { // 本身就在checkedKeys里的让它走正常流程
+            count++;
             result.push(item);
           } else {
-            if (checkedKeys.includes(item.nodeKey)) {
-              count++;
-              result.push(item);
+            if (!checkStrictly && result.map(rItem => rItem.nodeKey).includes(parent.nodeKey)) {
+              result.push(item); // 爹已选中 但自身不在checkedKeys里的让它跟爹走
             } else {
-              if (count >= checkedSize) {
+              if (count >= checkedSize) { // 爹和自己都没选中，如果checkedKeys里的内容找齐了，结束
                 goon = false;
               }
             }

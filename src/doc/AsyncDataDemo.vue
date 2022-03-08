@@ -1,7 +1,13 @@
 <template>
   <div class="demo">
     <a-button @click="checkedNodes">获取勾选节点</a-button>
-    <vir-tree ref="virTree" :source="list" show-checkbox :loadData="loadData" />
+    <vir-tree
+      ref="virTree"
+      :source="list"
+      show-checkbox
+      :loadData="loadData"
+       :default-checked-keys="defaultCheckedKeys"
+    />
   </div>
 </template>
 
@@ -30,6 +36,7 @@
     setup(prop, {emit}) {
       const list = ref<TreeNodeOptions[]>([]);
       const virTree = ref<TreeInstance | null>(null);
+      const defaultCheckedKeys = ref([]);
       onMounted(() => {
         list.value = recursion();
       });
@@ -57,6 +64,7 @@
         list,
         virTree,
         loadData,
+        defaultCheckedKeys,
         checkedNodes
       }
     }
