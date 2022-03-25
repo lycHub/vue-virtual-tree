@@ -76,13 +76,6 @@
             code-type="customNode">
             <custom-node-demo />
           </demo-box>
-          <demo-box
-            id="search-node-demo"
-            title="搜索树"
-            desc="虽然组件内部没有直接提供，但可以配合render自行实现"
-            code-type="searchNode">
-            <search-node-demo />
-          </demo-box>
         </a-col>
       </a-row>
     </section>
@@ -117,12 +110,11 @@
   import AsyncDataDemo from './AsyncDataDemo.vue';
   import CustomNodeDemo from './CustomNodeDemo.vue';
   import CustomIconDemo from './CustomIconDemo.vue';
-  import SearchNodeDemo from './SearchNodeDemo.vue';
   import { columns, eventData, methodColumns, methodData, nodeOptionData, propData } from './tableData';
 
   export default defineComponent({
     name: 'DocContainer',
-    components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo, CustomIconDemo, SearchNodeDemo },
+    components: { DemoBox, BaseDemo, CheckboxDemo, AsyncDataDemo, CustomNodeDemo, CustomIconDemo },
     setup() {
       const rowClsName = (_: any, index: number) => ([5, 6, 7, 8].includes(index) ? 'table-row-abandoned' : null);
 

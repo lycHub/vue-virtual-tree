@@ -5,6 +5,7 @@
 
 ## [文档 & 示例](https://lychub.github.io/vue-virtual-tree)
 ### [在线demo](https://stackblitz.com/edit/vue-virtual-tree-demos?file=src/App.vue)
+### [在线demo v4](https://stackblitz.com/edit/vue-virtual-tree-demos-bvicgw?file=src/App.vue)
 
 ## 基本使用
 
