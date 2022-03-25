@@ -4,7 +4,7 @@ import {SelectionModel} from "../selections";
 
 class TreeService {
   selectedNodes = ref(new SelectionModel<Required<TreeNodeOptions>>());
-  checkedNodes = ref(new SelectionModel<NodeKey>(true));
+  checkedNodeKeys = ref(new SelectionModel<NodeKey>(true));
   expandedKeys = ref(new SelectionModel<NodeKey>(true));
   disabledKeys = ref(new SelectionModel<NodeKey>(true));
 
@@ -48,7 +48,7 @@ class TreeService {
           if (defaultExpandedKeys.includes(parent.nodeKey)) {
             if (!checkStrictly && defaultCheckedKeys.includes(parent.nodeKey)) { // 默认展开并选中了
               defaultCheckedKeys.push(flatNode.nodeKey);
-              this.checkedNodes.value.select(flatNode.nodeKey);
+              this.checkedNodeKeys.value.select(flatNode.nodeKey);
             }
             result.push(flatNode);
           } else {
@@ -69,7 +69,7 @@ class TreeService {
         }
         
         if (defaultCheckedKeys.includes(flatNode.nodeKey)) {
-          this.checkedNodes.value.select(flatNode.nodeKey);
+          this.checkedNodeKeys.value.select(flatNode.nodeKey);
         }
         
         if (goon && childrenSize) {
@@ -88,7 +88,7 @@ class TreeService {
       if (children.length) {
         children.forEach(child => {
           const checkFunc = checked ? 'select' : 'deselect';
-          this.checkedNodes.value[checkFunc](child.nodeKey);
+          this.checkedNodeKeys.value[checkFunc](child.nodeKey);
           if (!checked) {
             this.removeDefaultCheckedKeys(child);
           }
@@ -106,9 +106,9 @@ class TreeService {
       if (node.parentKey != null) { // 说明是子节点
         const parentNode = flatList.find(item => item.nodeKey == node.parentKey)!;
         // console.log('parentNode', parentNode);
-        const parentChecked = (parentNode.children as Required<TreeNodeOptions>[]).every((child) => this.checkedNodes.value.isSelected(child.nodeKey));
-        if (parentChecked !== this.checkedNodes.value.isSelected(parentNode.nodeKey)) { // 父节点变了的话，就还要继续向上更新
-          this.checkedNodes.value.toggle(parentNode.nodeKey);
+        const parentChecked = (parentNode.children as Required<TreeNodeOptions>[]).every((child) => this.checkedNodeKeys.value.isSelected(child.nodeKey));
+        if (parentChecked !== this.checkedNodeKeys.value.isSelected(parentNode.nodeKey)) { // 父节点变了的话，就还要继续向上更新
+          this.checkedNodeKeys.value.toggle(parentNode.nodeKey);
           if (!parentChecked) {
             this.removeDefaultCheckedKeys(parentNode);
           }

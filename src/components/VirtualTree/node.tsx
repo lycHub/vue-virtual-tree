@@ -1,4 +1,4 @@
-import {computed, defineComponent, PropType, Slot, watch} from "vue";
+import { computed, defineComponent, PropType, Slot, watch, onMounted } from 'vue';
 import {NodeKey, TreeNodeOptions} from "./types";
 import VirtualCheckbox from '../VirtualCheckbox';
 import RenderNode from './render';
@@ -8,19 +8,19 @@ export default defineComponent({
   name: 'VirTreeNode',
   props: {
     selectedNodes: {
-      type: Object as PropType<SelectionModel<Required<TreeNodeOptions>>>,
+      type: Array as PropType<Required<TreeNodeOptions>[]>,
       required: true
     },
-    checkedNodes: {
-      type: Object as PropType<SelectionModel<NodeKey>>,
+    checkedNodeKeys: {
+      type: Array as PropType<NodeKey[]>,
       required: true
     },
     expandedKeys: {
-      type: Object as PropType<SelectionModel<NodeKey>>,
+      type: Array as PropType<NodeKey[]>,
       required: true
     },
     disabledKeys: {
-      type: Object as PropType<SelectionModel<NodeKey>>,
+      type: Array as PropType<NodeKey[]>,
       required: true
     },
     node: {
@@ -40,34 +40,27 @@ export default defineComponent({
   },
   emits: ['selectChange', 'toggleExpand', 'checkChange'],
   setup(props, { emit, expose }) {
-    /*watch(() => props.checkedNodes, newVal => {
-      console.log('wat checkedNodes', newVal.selected);
-    }, {
-      deep: true,
-      immediate: true
-    });*/
-    const halfChecked = computed(() => {
-      let result = false;
+    const getCheckedChildrenSize =(): number => {
+      let result = 0;
       if (!props.checkStrictly && props.node.hasChildren) {
         const { children } = props.node;
-        const checkedChildren = (children as Required<TreeNodeOptions>[])!.filter(item => props.checkedNodes.isSelected(item.nodeKey));
-        result = checkedChildren.length > 0 && checkedChildren.length < children!.length;
+        const checkedChildren = (children as Required<TreeNodeOptions>[])!.filter(item => props.checkedNodeKeys.includes(item.nodeKey));
+        result = checkedChildren.length;
       }
       return result;
-    });
-    const textCls = computed(() => {
-      let result = 'node-title';
-      if (props.selectedNodes.isSelected(props.node)) {
-        result += ' selected';
+    }
+
+    const setCheckedStatus = ()=> {
+      const checkedChildrenSize = getCheckedChildrenSize();
+      const shouldChecked = checkedChildrenSize > 0 && checkedChildrenSize === props.node.children!.length;
+      if (shouldChecked && ! props.checkedNodeKeys.includes(props.node.nodeKey)) {
+        handleCheckChange(shouldChecked);
       }
-      if (props.disabledKeys.isSelected(props.node.nodeKey)) {
-        result += ' disabled';
-      }
-      return result;
-    });
+    }
+
     const handleSelect = (event: MouseEvent) => {
       event.stopPropagation();
-      if (!props.disabledKeys.isSelected(props.node.nodeKey)) {
+      if (!props.disabledKeys.includes(props.node.nodeKey)) {
         emit('selectChange', props.node);
       }
     }
@@ -75,10 +68,41 @@ export default defineComponent({
       emit('toggleExpand', props.node);
     }
     const handleCheckChange = (checked: boolean) => {
-      emit('checkChange', [checked, props.node])
+      emit('checkChange', [checked, props.node]);
     }
+
+    watch(() => props.node, () => {
+      setCheckedStatus();
+    });
+
+    watch(() => props.checkedNodeKeys, newVal => {
+      setCheckedStatus();
+    });
+
+    onMounted(() => {
+      setCheckedStatus();
+    });
+
+    const halfChecked = computed(() => {
+      let result = false;
+      const checkedChildrenSize = getCheckedChildrenSize();
+      result = checkedChildrenSize > 0 && checkedChildrenSize < props.node.children!.length;
+      return result;
+    });
+
+    const textCls = computed(() => {
+      let result = 'node-title';
+      if (props.selectedNodes[0].nodeKey ===  props.node.nodeKey) {
+        result += ' selected';
+      }
+      if (props.disabledKeys.includes(props.node.nodeKey)) {
+        result += ' disabled';
+      }
+      return result;
+    });
+    
     const renderArrow = (): JSX.Element | null => {
-      return <div class={ ['node-arrow', props.expandedKeys.isSelected(props.node.nodeKey) ? 'expanded' : ''] }>
+      return <div class={ ['node-arrow', props.expandedKeys.includes(props.node.nodeKey) ? 'expanded' : ''] }>
         {
           props.node.hasChildren
             ? props.iconSlot ? props.iconSlot(props.node.loading) : props.node.loading
@@ -90,12 +114,11 @@ export default defineComponent({
     }
 
     const renderContent = () => {
-      // console.log('checkedNodes>>>>>>', props.checkedNodes);
       if (props.showCheckbox) {
         return <VirtualCheckbox
           class="node-content node-check-box"
-          disabled={ props.disabledKeys.isSelected(props.node.nodeKey) }
-          modelValue={ props.checkedNodes.isSelected(props.node.nodeKey) }
+          disabled={ props.disabledKeys.includes(props.node.nodeKey) }
+          modelValue={ props.checkedNodeKeys.includes(props.node.nodeKey) }
           halfChecked={ halfChecked.value }
           // @ts-ignore
           onChange={ handleCheckChange }>
