@@ -1,7 +1,8 @@
 import { App } from 'vue';
-import { Button, Layout, Menu, Row, Col, Tooltip, Typography, Anchor, Card, Input, Table } from "ant-design-vue";
+import { Alert, Button, Layout, Menu, Row, Col, Tooltip, Typography, Anchor, Card, Input, Table } from "ant-design-vue";
 
 const components = [
+  Alert,
   Button,
   Layout,
   Menu,

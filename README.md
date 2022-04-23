@@ -1,5 +1,7 @@
 # vue-virtual-tree
 
+**This library is deprecated, please use the refactored [virtual-tree](https://github.com/lycHub/ysx-library/blob/master/projects/VirtualTree/README.md)**
+
 ### Based on the tree component encapsulated by vue3 and dedicated to large data volume, if the data volume is not large, using this component is a bit wasteful
 
 English & [简体中文](README-CN.md)

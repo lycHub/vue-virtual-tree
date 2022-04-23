@@ -1,4 +1,8 @@
 # vue-virtual-tree
+
+**该库已经废弃，请使用重构后的[virtual-tree](https://github.com/lycHub/ysx-library/blob/master/projects/VirtualTree/README.md)**
+
+
 ### 基于vue3封装的，大数据量专用的tree组件，如果数据量不大，用本组件有些浪费了
 
 [English](README.md) & 简体中文

@@ -1,5 +1,14 @@
 <template>
   <a-layout class="app-layout">
+  <a-alert
+    style="position: fixed; width: 100%; top: 0; left: 0;z-index: 11;"
+    message="该库已废弃"
+    type="error"
+    closable>
+      <template #description>
+        <b>请使用重构后的：<a href="//github.com/lycHub/ysx-library/blob/master/projects/VirtualTree/README.md" target="_blank">Virtual Tree</a></b>
+      </template>
+    </a-alert>
     <a-layout-header class="header">
       <h2 class="title">Vue virtual tree</h2>
       <a class="link" href="//github.com/lycHub/vue-virtual-tree" target="_blank">github</a>
